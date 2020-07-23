@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="BareboneHaxe" package="com.ngawung.barebonehaxe" version="1.0.0" company="Ngawung Game" />
+	<app main="Main" path="Export" file="BareboneHaxe" />
+
+	<!-- ============== -->
+
+	<window width="800" height="480" orientation="portrait" background="0x666666" fps="60" />
+	<window depth-buffer="true" stencil-buffer="true" />
+
+	<window if="html5" resizable="false" />
+	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
+	<window if="android" orientation="landscape" fullscreen="true" width="0" height="0" />
+	
+	<!-- ============== -->
+
+	<source path="Source" />
+	<assets path="Assets" rename="assets" />
+
+	<!-- ============== -->
+	
+	<haxelib name="openfl" />
+	<haxelib name="starling" />
+
+	<!-- ============== -->
+
+	<architecture name="armv7" exclude="arm64" if="android" />
+	
+	
+</project>
