@@ -1,5 +1,6 @@
 package;
 
+import scene.Scene1;
 import starling.events.EnterFrameEvent;
 import ngawung.NGScene;
 import starling.events.Event;
@@ -7,7 +8,7 @@ import starling.display.Sprite;
 
 class Game extends Sprite {
 
-	private var scene(default, set):NGScene;
+	private var _curentScene:NGScene;
 
 	public function new () {
 		super ();
@@ -18,21 +19,21 @@ class Game extends Sprite {
 		// input init here
 
 		stage.addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
+
+		scene(new Scene1());
 	}
 
 	public function onEnterFrame(e:EnterFrameEvent):Void {
-		if (this.scene != null) this.scene.preUpdate(e.passedTime);
+		if (_curentScene != null) _curentScene.preUpdate(e.passedTime);
 		// input
 	}
 
-	public function set_scene(scene:NGScene):NGScene {
-		if (this.scene != null) this.scene.destroy(true);
+	public function scene(scene:NGScene):Void {
+		if (_curentScene != null) _curentScene.destroy(true);
 
-		this.scene = scene;
-		addChild(this.scene);
-		this.scene.init();
-
-		return this.scene;
+		_curentScene = scene;
+		addChild(_curentScene);
+		_curentScene.init();
 	}
 	
 }

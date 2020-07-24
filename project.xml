@@ -23,6 +23,8 @@
 	<haxelib name="openfl" />
 	<haxelib name="starling" />
 
+	 <haxelib name="hxcpp-debug-server" />
+
 	<!-- ============== -->
 
 	<architecture name="armv7" exclude="arm64" if="android" />

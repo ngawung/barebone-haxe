@@ -32,14 +32,19 @@ class Main extends Sprite {
 		
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		
-		setupStarling(true);
+		setupStarling(false);
 	}
 
-	public function setupStarling(isMobile:Bool = false):Void {
-		if (isMobile) _viewport.setTo(0, 0, stage.fullScreenWidth, stage.fullScreenHeight);
-		else _viewport.setTo(0, 0, stage.stageWidth, stage.stageHeight);
+	public function setupStarling(isMobile:Bool):Void {
+		if (isMobile) {
+			trace("mobile");
+			_viewport.setTo(0, 0, stage.fullScreenWidth, stage.fullScreenHeight);
+		} else {
+			trace("desktop");
+			_viewport.setTo(0, 0, stage.stageWidth, stage.stageHeight);	
+		}
 		
-		NG.starling = new Starling(Game, stage, _viewport);
+		NG.starling = new Starling(Game, stage);//, _viewport);
 		NG.starling.antiAliasing = NG.antiAlias;
 		NG.starling.skipUnchangedFrames = true;
 		NG.starling.simulateMultitouch = true;
@@ -63,17 +68,19 @@ class Main extends Sprite {
 		
 		// setup basic rectangle
 		_baseRectangle.setTo(0, 0, NG.BASE_WIDTH, NG.BASE_HEIGHT);
-		_screenRectangle.setTo(0, 0, _viewport.width, _viewport.height);
-		
+		_screenRectangle.setTo(0, 0, stage.stageWidth, stage.stageHeight);
+		trace(_viewport);
+		trace(_screenRectangle);
 		// setup new viewport
-		RectangleUtil.fit(_baseRectangle, _screenRectangle, ScaleMode.SHOW_ALL, false, _viewport);
+		_viewport = RectangleUtil.fit(_baseRectangle, _screenRectangle);
 		
 		switch(NG.viewportMode) {
 			case ViewportMode.LETTERBOX:
 				// set starling stage to base size
 				NG.starling.stage.stageWidth = Std.int(_baseRectangle.width);
 				NG.starling.stage.stageHeight = Std.int(_baseRectangle.height);
-			
+
+				NG.starling.viewPort = _viewport;
 			case ViewportMode.FULLSCREEN:
 				// get ratio size
 				var baseRatioWidth:Float = _viewport.width / NG.BASE_WIDTH;
