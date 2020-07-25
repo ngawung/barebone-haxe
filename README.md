@@ -2,11 +2,11 @@
 
 # TODO
 
-[ ] create asset preloader
-[ ] keyboard input
-[ ] physic scene
-[ ] game object
-[ ] sort children
-[ ] camera + ghosting
-[ ] 
-[ ] 
+- [ ] create asset preloader
+- [x] keyboard input
+- [ ] physic scene
+- [ ] game object
+- [ ] sort children
+- [ ] camera + ghosting
+- [ ] 
+- [ ] 
