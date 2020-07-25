@@ -1,5 +1,6 @@
 package;
 
+import ngawung.input.Input;
 import starling.assets.AssetManager;
 import ngawung.utils.ViewportMode;
 import starling.core.Starling;
@@ -18,9 +19,14 @@ class NG {
 	public static var starling:Starling;
 	public static var assets:AssetManager;
 
-	// shortcut
+	// shortcut, note make sure starling already init
+	// before using this sortcut
 
 	public static function getRoot():Game {
 		return cast(NG.starling.root, Game);
+	}
+
+	public static function getInput():Input {
+		return NG.getRoot().input;
 	}
 }

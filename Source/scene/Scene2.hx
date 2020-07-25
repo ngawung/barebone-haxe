@@ -1,5 +1,6 @@
 package scene;
 
+import openfl.ui.Keyboard;
 import starling.events.TouchPhase;
 import starling.events.TouchEvent;
 import starling.display.Image;
@@ -22,6 +23,12 @@ class Scene2 extends NGScene {
         addChild(img);
 
         img.addEventListener(TouchEvent.TOUCH, onTouch);
+    }
+
+    override public function update(dt:Float):Void {
+        if (NG.getInput().isReleased(Keyboard.ENTER)) {
+            NG.getRoot().scene(new Scene1());
+        }
     }
 
     public function onTouch(e:TouchEvent):Void {
