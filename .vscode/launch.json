@@ -4,6 +4,7 @@
         {
             "name": "HXCPP",
             "type": "hxcpp",
+            "preLaunchTask": "lime: build neko",
             "request": "launch",
             "program": "${workspaceFolder}/Export/neko/bin/BareboneHaxe"
         }

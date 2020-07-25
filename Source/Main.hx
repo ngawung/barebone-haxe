@@ -23,28 +23,15 @@ class Main extends Sprite {
 	
 	public function new() {
 		super();
-		if (stage != null) setupStarling(true);
-		else addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-	}
-
-	private function onAddedToStage(event:Dynamic):Void {
-		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-		
-		stage.scaleMode = StageScaleMode.NO_SCALE;
 		
 		setupStarling(false);
 	}
 
-	public function setupStarling(isMobile:Bool):Void {
-		if (isMobile) {
-			trace("mobile");
-			_viewport.setTo(0, 0, stage.fullScreenWidth, stage.fullScreenHeight);
-		} else {
-			trace("desktop");
-			_viewport.setTo(0, 0, stage.stageWidth, stage.stageHeight);	
-		}
+	public function setupStarling(isMobile:Bool = false):Void {
+		if (isMobile) _viewport.setTo(0, 0, stage.fullScreenWidth, stage.fullScreenHeight);
+		else _viewport.setTo(0, 0, stage.stageWidth, stage.stageHeight);	
 		
-		NG.starling = new Starling(Game, stage);//, _viewport);
+		NG.starling = new Starling(Game, stage, _viewport);
 		NG.starling.antiAliasing = NG.antiAlias;
 		NG.starling.skipUnchangedFrames = true;
 		NG.starling.simulateMultitouch = true;
@@ -68,11 +55,11 @@ class Main extends Sprite {
 		
 		// setup basic rectangle
 		_baseRectangle.setTo(0, 0, NG.BASE_WIDTH, NG.BASE_HEIGHT);
-		_screenRectangle.setTo(0, 0, stage.stageWidth, stage.stageHeight);
-		trace(_viewport);
+		_screenRectangle.setTo(0, 0, _viewport.width, _viewport.height);
+		trace(_baseRectangle);
 		trace(_screenRectangle);
 		// setup new viewport
-		_viewport = RectangleUtil.fit(_baseRectangle, _screenRectangle);
+		RectangleUtil.fit(_baseRectangle, _screenRectangle, ScaleMode.SHOW_ALL, false, _viewport);
 		
 		switch(NG.viewportMode) {
 			case ViewportMode.LETTERBOX:
@@ -80,7 +67,6 @@ class Main extends Sprite {
 				NG.starling.stage.stageWidth = Std.int(_baseRectangle.width);
 				NG.starling.stage.stageHeight = Std.int(_baseRectangle.height);
 
-				NG.starling.viewPort = _viewport;
 			case ViewportMode.FULLSCREEN:
 				// get ratio size
 				var baseRatioWidth:Float = _viewport.width / NG.BASE_WIDTH;
