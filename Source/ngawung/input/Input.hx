@@ -13,8 +13,8 @@ class Input {
     }
 
     private function addListener():Void {
-        NG.getRoot().stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-        NG.getRoot().stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+        NG.game.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+        NG.game.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
     }
 
     // Updated by Game engine

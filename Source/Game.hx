@@ -9,8 +9,8 @@ import starling.display.Sprite;
 
 class Game extends Sprite {
 
-	public var input:Input;
-	private var _curentScene:NGScene;
+	public var input(default, null):Input;
+	public var scene(default, set):NGScene;
 
 	public function new () {
 		super();
@@ -22,21 +22,23 @@ class Game extends Sprite {
 
 		stage.addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 
-		scene(new Scene1());
+		scene = new Scene1();
 	}
 
 	public function onEnterFrame(e:EnterFrameEvent):Void {
-		if (_curentScene != null) _curentScene.preUpdate(e.passedTime);
+		if (scene != null) scene.preUpdate(e.passedTime);
 		
 		input.update(e.passedTime);
 	}
 
-	public function scene(scene:NGScene):Void {
-		if (_curentScene != null) _curentScene.destroy(true);
+	private function set_scene(scene:NGScene):NGScene {
+		if (this.scene != null) this.scene.destroy(true);
 
-		_curentScene = scene;
-		addChild(_curentScene);
-		_curentScene.init();
+		this.scene = scene;
+		addChild(this.scene);
+		this.scene.init();
+
+		return this.scene;
 	}
 	
 }

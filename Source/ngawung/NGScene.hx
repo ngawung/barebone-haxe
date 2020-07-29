@@ -1,8 +1,10 @@
 package ngawung;
 
+import ngawung.utils.Camera;
 import starling.display.Sprite;
 
 class NGScene extends Sprite {
+    public var camera:Camera;
 
     public function new() {
         super();
@@ -10,13 +12,13 @@ class NGScene extends Sprite {
     }
 
     public function init():Void {
-        // init camera
+        camera = new Camera();
         // init physic
     }
     
     // Engine update
     public function preUpdate(dt:Float):Void {
-        // update camera
+        // camera.update(dt);
         // update physic
 
         update(dt);
@@ -27,7 +29,7 @@ class NGScene extends Sprite {
     }
 
     public function destroy(dispose:Bool = false):Void {
-        // destroy camera
+        camera.destroy();
         // destroy physic
 
         removeFromParent(dispose);

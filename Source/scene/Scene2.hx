@@ -26,14 +26,14 @@ class Scene2 extends NGScene {
     }
 
     override public function update(dt:Float):Void {
-        if (NG.getInput().isReleased(Keyboard.ENTER)) {
-            NG.getRoot().scene(new Scene1());
+        if (NG.game.input.isReleased(Keyboard.ENTER)) {
+            NG.game.scene = new Scene1();
         }
     }
 
     public function onTouch(e:TouchEvent):Void {
         if (e.getTouch(img, TouchPhase.ENDED) != null) {
-            NG.getRoot().scene(new Scene1());
+            NG.game.scene = new Scene1();
         }
     }
 

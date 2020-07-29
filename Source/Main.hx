@@ -97,8 +97,8 @@ class Main extends Sprite {
 	}
 	
 	public function handleStarlingReady() {
-		var root:Game = cast(NG.starling.root, Game);
-		root.init();
+		NG.game = cast(NG.starling.root, Game);
+		NG.game.init();
 
 	}
 	

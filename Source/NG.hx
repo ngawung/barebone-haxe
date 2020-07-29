@@ -22,11 +22,5 @@ class NG {
 	// shortcut, note make sure starling already init
 	// before using this sortcut
 
-	public static function getRoot():Game {
-		return cast(NG.starling.root, Game);
-	}
-
-	public static function getInput():Input {
-		return NG.getRoot().input;
-	}
+	public static var game:Game;
 }

@@ -18,8 +18,6 @@ class Scene1 extends NGScene {
     }
 
     override public function init():Void {
-        trace(stage.stageWidth, stage.stageHeight);
-        
         img = new Image(NG.assets.getTexture("openfl"));
         img.scale = 0.3;
         img.x = stage.stageWidth / 2 - img.width / 2;
@@ -27,12 +25,19 @@ class Scene1 extends NGScene {
         addChild(img);
 
         img.addEventListener(TouchEvent.TOUCH, onTouch);
+
+        //camera.enable = true;
     }
 
     override public function update(dt:Float):Void {
-        if (NG.getInput().isReleased(Keyboard.ENTER)) {
-            NG.getRoot().scene(new Scene2());
+        if (NG.game.input.isReleased(Keyboard.ENTER)) {
+            NG.game.scene = new Scene2();
         }
+
+        if (NG.game.input.isReleased(Keyboard.W)) camera.y -= 1;
+        if (NG.game.input.isReleased(Keyboard.S)) camera.y += 1;
+        if (NG.game.input.isReleased(Keyboard.D)) camera.x += 1;
+        if (NG.game.input.isReleased(Keyboard.A)) camera.x -= 1;
 
         //trace(NG.getInput().keyState[Keyboard.ENTER]);
     }
@@ -41,7 +46,7 @@ class Scene1 extends NGScene {
         var t:Touch = e.getTouch(img, TouchPhase.ENDED);
         
         if (t != null) {
-            NG.getRoot().scene(new Scene2());
+            NG.game.scene = new Scene2();
         }
     }
 
