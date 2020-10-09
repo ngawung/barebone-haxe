@@ -1,6 +1,5 @@
 package;
 
-
 import openfl.display.Sprite;
 import starling.core.Starling;
 
@@ -17,8 +16,7 @@ class Test extends Sprite {
 		
 		NG.starling = new Starling (Game, stage);
 		NG.starling.showStats = true;
-		NG.starling.start ();
-		
+		NG.starling.start();
 	}
 	
 	

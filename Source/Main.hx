@@ -1,14 +1,12 @@
 package;
 
-import lime.tools.AssetType;
-import openfl.display.StageScaleMode;
+import openfl.display3D.Context3DRenderMode;
 import lime.utils.Assets;
 import starling.assets.AssetManager;
 import ngawung.utils.ViewportMode;
 import starling.utils.ScaleMode;
 import starling.utils.RectangleUtil;
 import starling.utils.Align;
-import openfl.system.Capabilities;
 import starling.events.Event;
 import openfl.geom.Rectangle;
 import starling.core.Starling;
@@ -31,7 +29,7 @@ class Main extends Sprite {
 		if (isMobile) _viewport.setTo(0, 0, stage.fullScreenWidth, stage.fullScreenHeight);
 		else _viewport.setTo(0, 0, stage.stageWidth, stage.stageHeight);	
 		
-		NG.starling = new Starling(Game, stage, _viewport);
+		NG.starling = new Starling(Game, stage, _viewport, null, Context3DRenderMode.AUTO);
 		NG.starling.antiAliasing = NG.antiAlias;
 		NG.starling.skipUnchangedFrames = true;
 		NG.starling.simulateMultitouch = true;

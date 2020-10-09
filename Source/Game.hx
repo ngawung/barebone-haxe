@@ -4,7 +4,6 @@ import ngawung.input.Input;
 import scene.Scene1;
 import starling.events.EnterFrameEvent;
 import ngawung.NGScene;
-import starling.events.Event;
 import starling.display.Sprite;
 
 class Game extends Sprite {
@@ -36,7 +35,7 @@ class Game extends Sprite {
 
 		this.scene = scene;
 		addChild(this.scene);
-		this.scene.init();
+		this.scene.PreInit();
 
 		return this.scene;
 	}

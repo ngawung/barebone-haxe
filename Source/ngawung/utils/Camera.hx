@@ -59,7 +59,7 @@ class Camera {
     }
 
     public function update(dt:Float):Void {
-        if (!enable) return
+        if (!enable) return;
         
         // reset matrix
         matrix.identity();
@@ -72,6 +72,7 @@ class Camera {
         // offset
         matrix.translate(NG.game.scene.stage.stageWidth * centerX, NG.game.scene.stage.stageHeight * centerY);
         
+        if (NG.game.scene.transformationMatrix.toString() == matrix.toString()) return;
         NG.game.scene.transformationMatrix = matrix;
     }
 

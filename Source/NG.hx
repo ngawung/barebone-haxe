@@ -1,6 +1,5 @@
 package;
 
-import ngawung.input.Input;
 import starling.assets.AssetManager;
 import ngawung.utils.ViewportMode;
 import starling.core.Starling;
@@ -8,8 +7,8 @@ import starling.core.Starling;
 class NG {
 	public static var DEBUG:Bool = true;
 
-	public static var BASE_WIDTH:Float = 120;
-	public static var BASE_HEIGHT:Float = 240;
+	public static var BASE_WIDTH:Float = 600;
+	public static var BASE_HEIGHT:Float = 300;
 
 	public static var viewportMode:String = ViewportMode.FULLSCREEN;
 

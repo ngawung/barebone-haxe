@@ -23,7 +23,7 @@
 	<haxelib name="openfl" />
 	<haxelib name="starling" />
 
-	 <haxelib name="hxcpp-debug-server" />
+	<haxelib name="hxcpp-debug-server" />
 
 	<!-- ============== -->
 

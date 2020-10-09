@@ -26,7 +26,7 @@ class Scene1 extends NGScene {
 
         img.addEventListener(TouchEvent.TOUCH, onTouch);
 
-        //camera.enable = true;
+        camera.enable = true;
     }
 
     override public function update(dt:Float):Void {
@@ -34,10 +34,10 @@ class Scene1 extends NGScene {
             NG.game.scene = new Scene2();
         }
 
-        if (NG.game.input.isReleased(Keyboard.W)) camera.y -= 1;
-        if (NG.game.input.isReleased(Keyboard.S)) camera.y += 1;
-        if (NG.game.input.isReleased(Keyboard.D)) camera.x += 1;
-        if (NG.game.input.isReleased(Keyboard.A)) camera.x -= 1;
+        if (NG.game.input.isDown(Keyboard.W)) camera.y -= 1;
+        if (NG.game.input.isDown(Keyboard.S)) camera.y += 1;
+        if (NG.game.input.isDown(Keyboard.D)) camera.x += 1;
+        if (NG.game.input.isDown(Keyboard.A)) camera.x -= 1;
 
         //trace(NG.getInput().keyState[Keyboard.ENTER]);
     }
