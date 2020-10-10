@@ -1,9 +1,12 @@
-package ngawung;
+package ngawung.core;
 
 import ngawung.utils.Camera;
 import starling.display.Sprite;
 
-class NGScene extends Sprite {
+class Scene extends Sprite {
+    public var _ng(get, null):MainEngine;
+    public var game(get, null):Game;
+
     public var camera:Camera;
 
     public function new() {
@@ -41,5 +44,10 @@ class NGScene extends Sprite {
 
         removeFromParent(dispose);
     }
+
+    // GET && SET
+
+    private function get__ng():MainEngine { return MainEngine.instance; }
+    private function get_game():Game { return _ng.gameRoot; }
 
 }

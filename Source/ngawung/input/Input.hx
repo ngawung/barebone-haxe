@@ -1,20 +1,24 @@
 package ngawung.input;
 
+import ngawung.core.MainEngine;
 import starling.events.KeyboardEvent;
 import openfl.Vector;
 
 class Input {
+    private var _ng:MainEngine;
     public var keyState:Vector<Int>;
 
     public function new() {
+        _ng = MainEngine.instance;
+
         keyState = new Vector<Int>(256, true);
 
         addListener();
     }
 
     private function addListener():Void {
-        NG.game.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
-        NG.game.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
+        _ng.gameRoot.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+        _ng.gameRoot.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
     }
 
     // Updated by Game engine

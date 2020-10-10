@@ -1,15 +1,16 @@
-package;
+package ngawung.core;
 
+import ngawung.events.NGEvent;
+import starling.events.Event;
 import ngawung.input.Input;
-import scene.Scene1;
 import starling.events.EnterFrameEvent;
-import ngawung.NGScene;
+import ngawung.core.Scene;
 import starling.display.Sprite;
 
 class Game extends Sprite {
 
 	public var input(default, null):Input;
-	public var scene(default, set):NGScene;
+	public var scene(default, set):Scene;
 
 	public function new () {
 		super();
@@ -21,7 +22,7 @@ class Game extends Sprite {
 
 		stage.addEventListener(EnterFrameEvent.ENTER_FRAME, onEnterFrame);
 
-		scene = new Scene1();
+		dispatchEvent(new Event(NGEvent.GAME_INIT));
 	}
 
 	public function onEnterFrame(e:EnterFrameEvent):Void {
@@ -30,7 +31,7 @@ class Game extends Sprite {
 		input.update(e.passedTime);
 	}
 
-	private function set_scene(scene:NGScene):NGScene {
+	private function set_scene(scene:Scene):Scene {
 		if (this.scene != null) this.scene.destroy(true);
 
 		this.scene = scene;

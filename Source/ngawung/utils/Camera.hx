@@ -1,9 +1,11 @@
 package ngawung.utils;
 
+import ngawung.core.MainEngine;
 import starling.utils.MathUtil;
 import openfl.geom.Matrix;
 
 class Camera {
+    private var _ng:MainEngine;
     public var enable:Bool;
 		
     public var x:Float;
@@ -17,6 +19,8 @@ class Camera {
     private var matrix:Matrix = new Matrix();
 
     public function new() {
+        _ng = MainEngine.instance;
+
         enable = false;
         x = 0;
         y = 0;
@@ -70,10 +74,10 @@ class Camera {
         // scale
         matrix.scale(scaleX, scaleY);
         // offset
-        matrix.translate(NG.game.scene.stage.stageWidth * centerX, NG.game.scene.stage.stageHeight * centerY);
+        matrix.translate(_ng.gameRoot.scene.stage.stageWidth * centerX, _ng.gameRoot.scene.stage.stageHeight * centerY);
         
-        if (NG.game.scene.transformationMatrix.toString() == matrix.toString()) return;
-        NG.game.scene.transformationMatrix = matrix;
+        if (_ng.gameRoot.scene.transformationMatrix.toString() == matrix.toString()) return;
+        _ng.gameRoot.scene.transformationMatrix = matrix;
     }
 
 }

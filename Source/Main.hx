@@ -1,103 +1,50 @@
 package;
 
-import openfl.display3D.Context3DRenderMode;
-import lime.utils.Assets;
-import starling.assets.AssetManager;
-import ngawung.utils.ViewportMode;
-import starling.utils.ScaleMode;
-import starling.utils.RectangleUtil;
-import starling.utils.Align;
-import starling.events.Event;
-import openfl.geom.Rectangle;
-import starling.core.Starling;
+import openfl.utils.Assets;
+import scene.Scene1;
 import openfl.display.Sprite;
-
+import openfl.events.Event;
+import ngawung.events.NGEvent;
+import ngawung.utils.ViewportMode;
+import ngawung.core.MainEngine;
 
 class Main extends Sprite {
-	
-	private var _viewport:Rectangle = new Rectangle();
-	private var _baseRectangle:Rectangle = new Rectangle();
-	private var _screenRectangle:Rectangle = new Rectangle();
-	
-	public function new() {
+	private var _ng:MainEngine;
+
+	public function new () {
 		super();
-		
-		setupStarling(false);
+		_ng = MainEngine.instance;
+
+		// setup engine config
+		_ng.debug = true;
+		_ng.antiAlias = 1;
+		_ng.viewportMode = ViewportMode.FULLSCREEN;
+
+		// start engine
+		_ng.setupStarling(false, stage, ViewportMode.FULLSCREEN);
+		_ng.addEventListener(NGEvent.STARLING_READY, onStarlingReady);
+		_ng.addEventListener(NGEvent.GAME_INIT, onGameInit);
+	}
+	
+	private function onStarlingReady(e:Event):Void {
+		_ng.removeEventListener(NGEvent.STARLING_READY, onStarlingReady);
+
+		trace("starling Ready!!!");
 	}
 
-	public function setupStarling(isMobile:Bool = false):Void {
-		if (isMobile) _viewport.setTo(0, 0, stage.fullScreenWidth, stage.fullScreenHeight);
-		else _viewport.setTo(0, 0, stage.stageWidth, stage.stageHeight);	
-		
-		NG.starling = new Starling(Game, stage, _viewport, null, Context3DRenderMode.AUTO);
-		NG.starling.antiAliasing = NG.antiAlias;
-		NG.starling.skipUnchangedFrames = true;
-		NG.starling.simulateMultitouch = true;
-		NG.starling.addEventListener(Event.ROOT_CREATED, function():Void {
-			screenSetup();
-			setStats();
-			loadAssets();
-		});
+	private function onGameInit(e:Event):Void {
+		_ng.removeEventListener(NGEvent.GAME_INIT, onGameInit);
 
-		NG.starling.start();
-	}
+		trace("game init!!!");
 
-	public function setStats() {
-		if (NG.DEBUG) NG.starling.showStatsAt(Align.RIGHT);
-	}
-
-	public function screenSetup() {
-		// set base to screen size if not defined || Note: viewport dsini blm di rubah == screensize
-		if (NG.BASE_WIDTH < 0) NG.BASE_WIDTH = _viewport.width;
-		if (NG.BASE_HEIGHT < 0) NG.BASE_HEIGHT = _viewport.height;
-		
-		// setup basic rectangle
-		_baseRectangle.setTo(0, 0, NG.BASE_WIDTH, NG.BASE_HEIGHT);
-		_screenRectangle.setTo(0, 0, _viewport.width, _viewport.height);
-		trace(_baseRectangle);
-		trace(_screenRectangle);
-		// setup new viewport
-		RectangleUtil.fit(_baseRectangle, _screenRectangle, ScaleMode.SHOW_ALL, false, _viewport);
-		
-		switch(NG.viewportMode) {
-			case ViewportMode.LETTERBOX:
-				// set starling stage to base size
-				NG.starling.stage.stageWidth = Std.int(_baseRectangle.width);
-				NG.starling.stage.stageHeight = Std.int(_baseRectangle.height);
-
-			case ViewportMode.FULLSCREEN:
-				// get ratio size
-				var baseRatioWidth:Float = _viewport.width / NG.BASE_WIDTH;
-				var baseRatioHeight:Float = _viewport.height / NG.BASE_HEIGHT;
-				
-				// change viewport to screen size
-				NG.starling.viewPort.copyFrom(_screenRectangle);
-				
-				// set starling stage based on ratio
-				NG.starling.stage.stageWidth = Std.int(_screenRectangle.width / baseRatioWidth);
-				NG.starling.stage.stageHeight = Std.int(_screenRectangle.height / baseRatioHeight);
-		}
-	}
-
-	public function loadAssets():Void {
-		NG.starling.removeEventListener(Event.ROOT_CREATED, loadAssets);
-
-		NG.assets = new AssetManager();
-
-		NG.assets.verbose = NG.DEBUG;
-		NG.assets.enqueue([
+		_ng.assetManager.enqueue([
 			Assets.getPath("assets/openfl.png"),
 			Assets.getPath("assets/logonav.png")
-			
 		]);
 
-		NG.assets.loadQueue(handleStarlingReady);
-	}
-	
-	public function handleStarlingReady() {
-		NG.game = cast(NG.starling.root, Game);
-		NG.game.init();
-
+		_ng.assetManager.loadQueue(function():Void {
+			_ng.gameRoot.scene = new Scene1();
+		});
 	}
 	
 }
