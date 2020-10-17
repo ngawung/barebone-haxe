@@ -1,5 +1,7 @@
 package;
 
+import starling.assets.AssetType;
+import scene.Tilemap_1;
 import openfl.utils.Assets;
 import scene.Scene1;
 import openfl.display.Sprite;
@@ -34,11 +36,15 @@ class Main extends Sprite {
 
 		_ng.assetManager.enqueue([
 			Assets.getPath("assets/openfl.png"),
-			Assets.getPath("assets/logonav.png")
+			Assets.getPath("assets/logonav.png"),
+			Assets.getPath("assets/atlas.png"),
+			Assets.getPath("assets/atlas.xml"),
 		]);
 
+		
 		_ng.assetManager.loadQueue(function():Void {
-			_ng.gameRoot.scene = new Scene1();
+			// _ng.assetManager.addAsset("atlas", Assets.getPath("assets/atlas.png"), AssetType.TEXTURE_ATLAS);
+			_ng.gameRoot.scene = new Tilemap_1();
 		});
 	}
 	
