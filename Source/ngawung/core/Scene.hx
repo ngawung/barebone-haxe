@@ -51,9 +51,16 @@ class Scene extends Sprite {
         removeFromParent(dispose);
     }
 
-    // override fun
-    
+    // override function
 
+    override function removeChildAt(index:Int, dispose:Bool = false):DisplayObject {
+        // destroy child that implement Atom
+        var child:DisplayObject = getChildAt(index);
+        if (Std.isOfType(child, Atom)) cast(child, Atom).destroy();
+        
+        return super.removeChildAt(index, dispose);
+    }
+    
     // GET && SET
 
     private function get__ng():MainEngine { return MainEngine.instance; }
