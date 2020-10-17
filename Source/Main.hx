@@ -16,22 +16,17 @@ class Main extends Sprite {
 		_ng = MainEngine.instance;
 
 		// setup engine config
-		_ng.debug = true;
-		_ng.antiAlias = 1;
-		_ng.viewportMode = ViewportMode.FULLSCREEN;
+		_ng.config.debug = true;
+		_ng.config.antialias = 1;
+		_ng.config.viewportMode = ViewportMode.FULLSCREEN;
 
-		// start engine
-		_ng.setupStarling(false, stage, ViewportMode.FULLSCREEN);
-		_ng.addEventListener(NGEvent.STARLING_READY, onStarlingReady);
+		// setup event
 		_ng.addEventListener(NGEvent.GAME_INIT, onGameInit);
+		
+		// start engine
+		_ng.setupStarling(false, stage);
 	}
 	
-	private function onStarlingReady(e:Event):Void {
-		_ng.removeEventListener(NGEvent.STARLING_READY, onStarlingReady);
-
-		trace("starling Ready!!!");
-	}
-
 	private function onGameInit(e:Event):Void {
 		_ng.removeEventListener(NGEvent.GAME_INIT, onGameInit);
 

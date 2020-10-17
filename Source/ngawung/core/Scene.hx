@@ -1,17 +1,19 @@
 package ngawung.core;
 
+import ngawung.display.Atom;
+import starling.display.DisplayObject;
 import ngawung.utils.Camera;
 import starling.display.Sprite;
 
 class Scene extends Sprite {
-    public var _ng(get, null):MainEngine;
+    private var _ng(get, null):MainEngine;
     public var game(get, null):Game;
 
     public var camera:Camera;
 
     public function new() {
         super();
-
+    
     }
 
     public function PreInit():Void {
@@ -24,14 +26,18 @@ class Scene extends Sprite {
     
     // Engine update
     public function preUpdate(dt:Float):Void {
-        camera.update(dt);
         // update physic
+
+        // update child that implement atom
+        for (child in __children) {
+            if (Std.isOfType(child, Atom)) cast(child, Atom).update(dt);
+        }
 
         update(dt);
     }
 
     public function init():Void {
-    
+        
     }
 
     public function update(dt:Float):Void {
@@ -44,6 +50,9 @@ class Scene extends Sprite {
 
         removeFromParent(dispose);
     }
+
+    // override fun
+    
 
     // GET && SET
 

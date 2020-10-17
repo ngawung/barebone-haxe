@@ -1,5 +1,8 @@
 package scene;
 
+import starling.utils.MathUtil;
+import ngawung.core.MainEngine;
+import ngawung.display.Atom;
 import ngawung.core.Scene;
 import openfl.ui.Keyboard;
 import starling.events.Touch;
@@ -18,10 +21,20 @@ class Scene1 extends Scene {
     }
 
     override public function init():Void {
-        img = new Image(_ng.assetManager.getTexture("openfl"));
+        var q:Quad = new Quad(3, stage.stageHeight, 0xFF00D2);
+        q.x = stage.stageWidth / 2 - q.width / 2;
+        addChild(q);
+        
+        var q2:Quad = new Quad(stage.stageWidth, 3, 0xFF00D2);
+        q2.y = stage.stageHeight / 2 - q2.height / 2;
+        addChild(q2);
+
+        img = new MyImage();
+        img.pivotX = (img.width )/ 2;
+        img.pivotY = (img.height )/ 2;
+        img.x = stage.stageWidth / 2;
+        img.y = stage.stageHeight / 2;
         img.scale = 0.3;
-        img.x = stage.stageWidth / 2 - img.width / 2;
-        img.y = stage.stageHeight / 2 - img.height / 2;
         addChild(img);
 
         img.addEventListener(TouchEvent.TOUCH, onTouch);
@@ -51,4 +64,23 @@ class Scene1 extends Scene {
     }
 
 
+}
+
+class MyImage extends Image implements Atom {
+    public var layer:Int;
+
+    public function new() {
+        super(MainEngine.instance.assetManager.getTexture("openfl"));
+    }
+
+    public function init():Void {
+
+    }
+    public function update(dt:Float):Void {
+        this.rotation += MathUtil.deg2rad(1);
+    }
+
+    public function destroy():Void {
+
+    }
 }

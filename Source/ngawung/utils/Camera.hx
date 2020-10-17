@@ -5,22 +5,21 @@ import starling.utils.MathUtil;
 import openfl.geom.Matrix;
 
 class Camera {
-    private var _ng:MainEngine;
+    private var _ng(get, null):MainEngine;
+
     public var enable:Bool;
 		
-    public var x:Float;
-    public var y:Float;
-    public var centerX:Float;
-    public var centerY:Float;
-    public var rotation:Float;
-    public var scaleX:Float;
-    public var scaleY:Float;
+    public var x(default, set):Float = 0;
+    public var y(default, set):Float = 0;
+    public var centerX(default, set):Float = 0;
+    public var centerY(default, set):Float = 0;
+    public var rotation(default, set):Float = 0;
+    public var scaleX(default, set):Float = 1;
+    public var scaleY(default, set):Float = 1;
 
     private var matrix:Matrix = new Matrix();
 
     public function new() {
-        _ng = MainEngine.instance;
-
         enable = false;
         x = 0;
         y = 0;
@@ -62,7 +61,7 @@ class Camera {
         // just in case if i add something...
     }
 
-    public function update(dt:Float):Void {
+    private function update():Void {
         if (!enable) return;
         
         // reset matrix
@@ -79,5 +78,51 @@ class Camera {
         if (_ng.gameRoot.scene.transformationMatrix.toString() == matrix.toString()) return;
         _ng.gameRoot.scene.transformationMatrix = matrix;
     }
+
+    // GET && SET
+
+    private function set_x(value:Float):Float { 
+        x = value;
+        update();
+        return x;
+    }
+
+    private function set_y(value:Float):Float { 
+        y = value;
+        update();
+        return y;
+    }
+
+    private function set_centerX(value:Float):Float { 
+        centerX = value;
+        update();
+        return centerX;
+    }
+
+    private function set_centerY(value:Float):Float { 
+        centerY = value;
+        update();
+        return centerY;
+    }
+
+    private function set_rotation(value:Float):Float { 
+        rotation = value;
+        update();
+        return rotation;
+    }
+
+    private function set_scaleX(value:Float):Float { 
+        scaleX = value;
+        update();
+        return scaleX;
+    }
+
+    private function set_scaleY(value:Float):Float { 
+        scaleY = value;
+        update();
+        return scaleY;
+    }
+    
+    private function get__ng():MainEngine { return MainEngine.instance; }
 
 }
