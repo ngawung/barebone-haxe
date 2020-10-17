@@ -1,12 +1,5 @@
 # Barebone for starling openfl with haxe....
 
-# TODO
+flash gonna die soon... and now adobe air also require license for removing splash screen. i think its a best time to use another engine now...
 
-- [ ] create asset preloader
-- [x] keyboard input
-- [ ] physic scene
-- [ ] game object
-- [ ] sort children
-- [ ] camera + ghosting
-- [ ] 
-- [ ] 
+luckly there is starling port for haxe... so its haxe time
