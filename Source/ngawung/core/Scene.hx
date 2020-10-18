@@ -1,5 +1,6 @@
 package ngawung.core;
 
+import ngawung.input.Input;
 import ngawung.display.Atom;
 import starling.display.DisplayObject;
 import ngawung.utils.Camera;
@@ -8,6 +9,7 @@ import starling.display.Sprite;
 class Scene extends Sprite {
     private var _ng(get, null):MainEngine;
     public var game(get, null):Game;
+    public var input(get, null):Input;
 
     public var camera:Camera;
 
@@ -65,5 +67,6 @@ class Scene extends Sprite {
 
     private function get__ng():MainEngine { return MainEngine.instance; }
     private function get_game():Game { return _ng.gameRoot; }
+    private function get_input():Input { return game.input; }
 
 }

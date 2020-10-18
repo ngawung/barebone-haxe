@@ -40,11 +40,11 @@ class Input {
     }
 
     // get key status
-    public function isDown(code:Int):Bool {
+    public function isHeld(code:Int):Bool {
         return keyState[code] > 0;
     }
     
-    public function isPressed(code:Int):Bool {
+    public function isDown(code:Int):Bool {
         return keyState[code] == 1;
     }
     

@@ -21,13 +21,6 @@ class Camera {
 
     public function new() {
         enable = false;
-        x = 0;
-        y = 0;
-        centerX = 0;
-        centerY = 0;
-        rotation = 0;
-        scaleX = 1;
-        scaleY = 1;
     }
 
     public function setTo(x:Float, y:Float):Void {
@@ -79,45 +72,59 @@ class Camera {
         _ng.gameRoot.scene.transformationMatrix = matrix;
     }
 
+    /**
+     * Output warn when set camera variable but camera not enable yet
+     */
+    private function warnCamera():Void {
+        if (!enable) trace("[WARNING] Camera not enable yet!");
+    }
+
     // GET && SET
 
-    private function set_x(value:Float):Float { 
+    private function set_x(value:Float):Float {
+        warnCamera(); 
         x = value;
         update();
         return x;
     }
 
-    private function set_y(value:Float):Float { 
+    private function set_y(value:Float):Float {
+        warnCamera();
         y = value;
         update();
         return y;
     }
 
-    private function set_centerX(value:Float):Float { 
+    private function set_centerX(value:Float):Float {
+        warnCamera();
         centerX = value;
         update();
         return centerX;
     }
 
-    private function set_centerY(value:Float):Float { 
+    private function set_centerY(value:Float):Float {
+        warnCamera();
         centerY = value;
         update();
         return centerY;
     }
 
-    private function set_rotation(value:Float):Float { 
+    private function set_rotation(value:Float):Float {
+        warnCamera();
         rotation = value;
         update();
         return rotation;
     }
 
-    private function set_scaleX(value:Float):Float { 
+    private function set_scaleX(value:Float):Float {
+        warnCamera();
         scaleX = value;
         update();
         return scaleX;
     }
 
-    private function set_scaleY(value:Float):Float { 
+    private function set_scaleY(value:Float):Float {
+        warnCamera();
         scaleY = value;
         update();
         return scaleY;
