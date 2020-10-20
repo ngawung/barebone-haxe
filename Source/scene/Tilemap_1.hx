@@ -1,5 +1,6 @@
 package scene;
 
+import starling.utils.MathUtil;
 import starling.textures.Texture;
 import starling.display.Quad;
 import openfl.ui.Keyboard;
@@ -14,15 +15,15 @@ class Tilemap_1 extends Scene {
     private var VisibleTileHeight:Int = 7;
 
     private var MapsData:Array<String> = [];
-    private var TileList:Array<Image> = [];
+    private var TileList:Array<Array<Image>> = [];
 
     private var cameraSpeed:Int = 5;
 
     public function new() {
         super();
 
-        MapsData.push("123456789#123456789#123456789#123456789");
-        MapsData.push("2..##........................####......");
+        MapsData.push("123456789.........123456789.........123");
+        MapsData.push("2..##....123456789.........123456789...");
         MapsData.push("3##.........#####.........#####........");
         MapsData.push("4..........#####.......................");
         MapsData.push("5##################.######....#######..");
@@ -33,13 +34,15 @@ class Tilemap_1 extends Scene {
         MapsData.push(".......................................");
 
         for(y in 0...VisibleTileHeight) {
+            var x_array:Array<Image> = [];
             for(x in 0...VisibleTileWidth) {
                 var img:Image = new Image(getTexture(x, y));
                 img.x = x * TileSize;
                 img.y = y * TileSize;
-                TileList.push(img);
+                x_array.push(img);
                 addChild(img);
             }
+            TileList.push(x_array);
         }
     }
     
@@ -65,53 +68,59 @@ class Tilemap_1 extends Scene {
         if (input.isHeld(Keyboard.A)) camera.x -= cameraSpeed;
         if (input.isHeld(Keyboard.D)) camera.x += cameraSpeed;
 
+        camera.x = MathUtil.clamp(camera.x, 0, MapsData[0].length * TileSize - stage.stageWidth);
+        camera.y = MathUtil.clamp(camera.y, 0, MapsData.length * TileSize);
+
         // loop tile
 
         // check left side tile
-        if (TileList[0].x + TileSize < camera.x) {
+        if (TileList[0][0].x + TileSize < camera.x) {
             for (y in 0...VisibleTileHeight) {
+                trace("loop ke", y);
                 // move tile
-                TileList[y * VisibleTileWidth].x = TileList[y * VisibleTileWidth + VisibleTileWidth - 1].x + TileSize;
+                TileList[y][0].x = TileList[y][VisibleTileWidth - 1].x + TileSize;
+                TileList[y][0].texture = getTexture(Std.int((camera.x / TileSize) + VisibleTileWidth - 1), y);
 
                 // move tile in TileList
-                TileList.insert(y * VisibleTileWidth + VisibleTileWidth - 1, TileList.splice(y * VisibleTileWidth, 1)[0]);
+                TileList[y].push(TileList[y].shift());
             }
         }
 
-        // check right side tile
-        if (TileList[VisibleTileWidth - 1].x > camera.x + stage.stageWidth) {
-            for (y in 0...VisibleTileHeight) {
-                // move tile
-                TileList[y * VisibleTileWidth + VisibleTileWidth - 1].x = TileList[y * VisibleTileWidth].x - TileSize;
+        // // check right side tile
+        // if (TileList[VisibleTileWidth - 1].x > camera.x + stage.stageWidth) {
+        //     for (y in 0...VisibleTileHeight) {
+        //         // move tile
+        //         TileList[y * VisibleTileWidth + VisibleTileWidth - 1].x = TileList[y * VisibleTileWidth].x - TileSize;
 
-                // move tile in TileList
-                TileList.insert(y * VisibleTileWidth, TileList.splice(y * VisibleTileWidth + VisibleTileWidth - 1, 1)[0]);
-            }
-        }
+        //         // move tile in TileList
+        //         TileList.insert(y * VisibleTileWidth, TileList.splice(y * VisibleTileWidth + VisibleTileWidth - 1, 1)[0]);
+        //     }
+        // }
 
-        // check top side tile
-        if (TileList[0].y + TileSize < camera.y) {
-            for (x in 0...VisibleTileWidth) {
-                // move tile
-                TileList[x].y = TileList[(VisibleTileHeight - 1) * VisibleTileWidth + x].y + TileSize;
-            }
-            // move tile in TileList
-            TileList = TileList.concat(TileList.splice(0, VisibleTileWidth));
-        }
+        // // check top side tile
+        // if (TileList[0].y + TileSize < camera.y) {
+        //     for (x in 0...VisibleTileWidth) {
+        //         // move tile
+        //         TileList[x].y = TileList[(VisibleTileHeight - 1) * VisibleTileWidth + x].y + TileSize;
+        //     }
+        //     // move tile in TileList
+        //     TileList = TileList.concat(TileList.splice(0, VisibleTileWidth));
+        // }
 
-        // check bottom side tile
-        if (TileList[(VisibleTileHeight - 1) * VisibleTileWidth].y > camera.y + stage.stageHeight) {
-            for (x in 0...VisibleTileWidth) {
-                // move tile
-                TileList[(VisibleTileHeight - 1) * VisibleTileWidth + x].y = TileList[x].y - TileSize;
-            }
-            // move tile in TileList
-            TileList = TileList.splice((VisibleTileHeight - 1) * VisibleTileWidth , VisibleTileWidth).concat(TileList);
-        }
+        // // check bottom side tile
+        // if (TileList[(VisibleTileHeight - 1) * VisibleTileWidth].y > camera.y + stage.stageHeight) {
+        //     for (x in 0...VisibleTileWidth) {
+        //         // move tile
+        //         TileList[(VisibleTileHeight - 1) * VisibleTileWidth + x].y = TileList[x].y - TileSize;
+        //     }
+        //     // move tile in TileList
+        //     TileList = TileList.splice((VisibleTileHeight - 1) * VisibleTileWidth , VisibleTileWidth).concat(TileList);
+        // }
 
     }
 
     private function getTexture(x:Int, y:Int):Texture {
+        trace(x, y);
         switch(MapsData[y].charAt(x)) {
             case ".": return _ng.assetManager.getTexture("tile2");
             case "#": return _ng.assetManager.getTexture("tile1");
