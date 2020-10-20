@@ -9,8 +9,8 @@ class Tilemap_1 extends Scene {
 
     private var TileSize:Int = 64;
 
-    private var VisibleTileWidth:Int = 14;
-    private var VisibleTileHeight:Int = 9;
+    private var VisibleTileWidth:Int = 12;
+    private var VisibleTileHeight:Int = 7;
 
     private var MapsData:Array<String> = [];
     private var TileList:Array<Image> = [];
