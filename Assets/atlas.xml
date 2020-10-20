@@ -2,8 +2,17 @@
 <!--
 Created with Free texture packer v0.6.6 http://free-tex-packer.com
 -->
-<TextureAtlas imagePath="atlas.png" width="128" height="256">
-  <SubTexture name="player" x="1" y="1"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
-  <SubTexture name="tile1" x="1" y="67"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
-  <SubTexture name="tile2" x="1" y="133"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
+<TextureAtlas imagePath="atlas.png" width="128" height="1024">
+  <SubTexture name="1" x="1" y="1"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
+  <SubTexture name="2" x="1" y="67"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
+  <SubTexture name="3" x="1" y="133"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
+  <SubTexture name="4" x="1" y="199"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
+  <SubTexture name="5" x="1" y="265"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
+  <SubTexture name="6" x="1" y="331"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
+  <SubTexture name="7" x="1" y="397"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
+  <SubTexture name="8" x="1" y="463"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
+  <SubTexture name="9" x="1" y="529"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
+  <SubTexture name="player" x="1" y="595"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
+  <SubTexture name="tile1" x="1" y="661"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
+  <SubTexture name="tile2" x="1" y="727"  width="64" height="64" frameX="-0" frameY="-0" frameWidth="64" frameHeight="64"/>
 </TextureAtlas>

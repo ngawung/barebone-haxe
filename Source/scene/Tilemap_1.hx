@@ -1,5 +1,6 @@
 package scene;
 
+import starling.textures.Texture;
 import starling.display.Quad;
 import openfl.ui.Keyboard;
 import starling.display.Image;
@@ -20,26 +21,20 @@ class Tilemap_1 extends Scene {
     public function new() {
         super();
 
-        MapsData.push("......................................");
-        MapsData.push("...##........................####.....");
-        MapsData.push("###.........#####.........#####.......");
-        MapsData.push("...........#####......................");
-        MapsData.push("###################.######....#######.");
-        MapsData.push(".........#..........#.......####......");
-        MapsData.push(".........#.##########....####.........");
-        MapsData.push(".........#..............####..........");
-        MapsData.push(".........################.............");
-        MapsData.push("......................................");
+        MapsData.push("123456789#123456789#123456789#123456789");
+        MapsData.push("2..##........................####......");
+        MapsData.push("3##.........#####.........#####........");
+        MapsData.push("4..........#####.......................");
+        MapsData.push("5##################.######....#######..");
+        MapsData.push("6........#..........#.......####.......");
+        MapsData.push("7........#.##########....####..........");
+        MapsData.push("8........#..............####...........");
+        MapsData.push("9........################..............");
+        MapsData.push(".......................................");
 
-        var TextureName:String = "";
         for(y in 0...VisibleTileHeight) {
             for(x in 0...VisibleTileWidth) {
-                switch(MapsData[y].charAt(x)) {
-                    case ".": TextureName = "tile2";
-                    case "#": TextureName = "tile1";
-                }
-
-                var img:Image = new Image(_ng.assetManager.getTexture(TextureName));
+                var img:Image = new Image(getTexture(x, y));
                 img.x = x * TileSize;
                 img.y = y * TileSize;
                 TileList.push(img);
@@ -114,6 +109,24 @@ class Tilemap_1 extends Scene {
             TileList = TileList.splice((VisibleTileHeight - 1) * VisibleTileWidth , VisibleTileWidth).concat(TileList);
         }
 
+    }
+
+    private function getTexture(x:Int, y:Int):Texture {
+        switch(MapsData[y].charAt(x)) {
+            case ".": return _ng.assetManager.getTexture("tile2");
+            case "#": return _ng.assetManager.getTexture("tile1");
+            case "1": return _ng.assetManager.getTexture("1");
+            case "2": return _ng.assetManager.getTexture("2");
+            case "3": return _ng.assetManager.getTexture("3");
+            case "4": return _ng.assetManager.getTexture("4");
+            case "5": return _ng.assetManager.getTexture("5");
+            case "6": return _ng.assetManager.getTexture("6");
+            case "7": return _ng.assetManager.getTexture("7");
+            case "8": return _ng.assetManager.getTexture("8");
+            case "9": return _ng.assetManager.getTexture("9");
+
+            default: return _ng.assetManager.getTexture("tile2");
+        }
     }
 
 }
