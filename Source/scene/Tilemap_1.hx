@@ -30,12 +30,18 @@ class Tilemap_1 extends Scene {
         MapsData.push("2..##....123456789.....................");
         MapsData.push("3##.........#####.123456789####........");
         MapsData.push("4..........#####...........123456789...");
-        MapsData.push("5##################.######....######123");
-        MapsData.push("6........#..........#.......####.......");
-        MapsData.push("7........#.##########....####..........");
-        MapsData.push("8........#..............####...........");
-        MapsData.push("9........################..............");
-        MapsData.push(".......................................");
+        MapsData.push(".1#################.######....######123");
+        MapsData.push(".2.......#..........#.......####.......");
+        MapsData.push(".3.......#.##########....####..........");
+        MapsData.push(".4.......#..............####...........");
+        MapsData.push("..1......################..............");
+        MapsData.push("..2....................................");
+        MapsData.push("..3....................................");
+        MapsData.push("..4....................................");
+        MapsData.push("...1...................................");
+        MapsData.push("...2...................................");
+        MapsData.push("...3...................................");
+        MapsData.push("...4...................................");
         
         for(y in 0...VisibleTileHeight) {
             var x_array:Array<Image> = [];
@@ -85,8 +91,8 @@ class Tilemap_1 extends Scene {
         if (input.isHeld(Keyboard.A)) camera.x -= cameraSpeed;
         if (input.isHeld(Keyboard.D)) camera.x += cameraSpeed;
 
-        camera.x = MathUtil.clamp(camera.x, -(StartPos.x * TileSize) , (MapsData[0].length - StartPos.x - VisibleTileWidth) * TileSize);
-        // camera.y = MathUtil.clamp(camera.y, 0, visibleRegion.y);
+        camera.x = MathUtil.clamp(camera.x, -(StartPos.x * TileSize), (MapsData[0].length - StartPos.x - VisibleTileWidth) * TileSize);
+        camera.y = MathUtil.clamp(camera.y, -(StartPos.y * TileSize), (MapsData.length - StartPos.y - VisibleTileHeight) * TileSize);
 
         // loop tile
 
@@ -97,7 +103,7 @@ class Tilemap_1 extends Scene {
             for (y in 0...VisibleTileHeight) {
                 // move tile
                 TileList[y][0].x = TileList[y][VisibleTileWidth - 1].x + TileSize;
-                TileList[y][0].texture = getTexture(Std.int(CurrentPos.x) + (VisibleTileWidth - 1), y);
+                TileList[y][0].texture = getTexture(Std.int(CurrentPos.x) + (VisibleTileWidth - 1), Std.int(y + CurrentPos.y));
 
                 // move tile in TileList
                 TileList[y].push(TileList[y].shift());
@@ -111,32 +117,39 @@ class Tilemap_1 extends Scene {
             for (y in 0...VisibleTileHeight) {
                 // move tile
                 TileList[y][VisibleTileWidth - 1].x = TileList[y][0].x - TileSize;
-                TileList[y][VisibleTileWidth - 1].texture = getTexture(Std.int(CurrentPos.x), y);
+                TileList[y][VisibleTileWidth - 1].texture = getTexture(Std.int(CurrentPos.x), Std.int(y + CurrentPos.y));
 
                 // move tile in TileList
                 TileList[y].insert(0, TileList[y].pop());
             }
         }
 
-        // // check top side tile
-        // if (TileList[0].y + TileSize < camera.y) {
-        //     for (x in 0...VisibleTileWidth) {
-        //         // move tile
-        //         TileList[x].y = TileList[(VisibleTileHeight - 1) * VisibleTileWidth + x].y + TileSize;
-        //     }
-        //     // move tile in TileList
-        //     TileList = TileList.concat(TileList.splice(0, VisibleTileWidth));
-        // }
+        // check top side tile
+        if (TileList[0][0].y + TileSize <= camera.y) {
+            CurrentPos.y++;
+            CurrentPos.y = MathUtil.clamp(CurrentPos.y, 0, MapsData.length - VisibleTileHeight);
+            for (x in 0...VisibleTileWidth) {
+                // move tile
+                TileList[0][x].y = TileList[VisibleTileHeight - 1][x].y + TileSize;
+                TileList[0][x].texture = getTexture(Std.int(x + CurrentPos.x), Std.int(CurrentPos.y) + (VisibleTileHeight - 1));
+            }
+            // move tile in TileList
+            TileList.push(TileList.shift());
+        }
 
-        // // check bottom side tile
-        // if (TileList[(VisibleTileHeight - 1) * VisibleTileWidth].y > camera.y + stage.stageHeight) {
-        //     for (x in 0...VisibleTileWidth) {
-        //         // move tile
-        //         TileList[(VisibleTileHeight - 1) * VisibleTileWidth + x].y = TileList[x].y - TileSize;
-        //     }
-        //     // move tile in TileList
-        //     TileList = TileList.splice((VisibleTileHeight - 1) * VisibleTileWidth , VisibleTileWidth).concat(TileList);
-        // }
+        // check bottom side tile
+        if (TileList[VisibleTileHeight - 1][0].y >= camera.y + VisibleTileHeight * TileSize) {
+            CurrentPos.y--;
+            CurrentPos.y = MathUtil.clamp(CurrentPos.y, 0, MapsData.length - VisibleTileHeight);
+            trace(CurrentPos.y);
+            for (x in 0...VisibleTileWidth) {
+                // move tile
+                TileList[VisibleTileHeight - 1][x].y = TileList[0][x].y - TileSize;
+                TileList[VisibleTileHeight - 1][x].texture = getTexture(Std.int(x + CurrentPos.x), Std.int(CurrentPos.y));
+            }
+            // move tile in TileList
+            TileList.insert(0, TileList.pop());
+        }
 
     }
 
