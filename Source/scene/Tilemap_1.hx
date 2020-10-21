@@ -19,17 +19,18 @@ class Tilemap_1 extends Scene {
     private var MapsData:Array<String> = [];
     private var TileList:Array<Array<Image>> = [];
 
-    private var CurrentPos:Point = new Point(0, 0);
+    private var StartPos:Point = new Point(0, 0);
+    private var CurrentPos:Point = new Point();
     private var cameraSpeed:Int = 5;
 
     public function new() {
         super();
 
-        MapsData.push("123456789.........123456789.........123");
-        MapsData.push("2..##....123456789.........123456789...");
-        MapsData.push("3##.........#####.........#####........");
-        MapsData.push("4..........#####.......................");
-        MapsData.push("5##################.######....#######..");
+        MapsData.push("123456789..............................");
+        MapsData.push("2..##....123456789.....................");
+        MapsData.push("3##.........#####.123456789####........");
+        MapsData.push("4..........#####...........123456789...");
+        MapsData.push("5##################.######....######123");
         MapsData.push("6........#..........#.......####.......");
         MapsData.push("7........#.##########....####..........");
         MapsData.push("8........#..............####...........");
@@ -49,6 +50,7 @@ class Tilemap_1 extends Scene {
         }
 
         visibleRegion.setTo(MapsData[0].length * TileSize, MapsData.length * TileSize);
+        CurrentPos.setTo(StartPos.x, StartPos.y);
     }
     
     override public function init():Void {
@@ -83,7 +85,7 @@ class Tilemap_1 extends Scene {
         if (input.isHeld(Keyboard.A)) camera.x -= cameraSpeed;
         if (input.isHeld(Keyboard.D)) camera.x += cameraSpeed;
 
-        // camera.x = MathUtil.clamp(camera.x, 0, visibleRegion.x - VisibleTileWidth * TileSize);
+        camera.x = MathUtil.clamp(camera.x, -(StartPos.x * TileSize) , (MapsData[0].length - StartPos.x - VisibleTileWidth) * TileSize);
         // camera.y = MathUtil.clamp(camera.y, 0, visibleRegion.y);
 
         // loop tile
@@ -92,9 +94,7 @@ class Tilemap_1 extends Scene {
         if (TileList[0][0].x + TileSize <= camera.x) {
             CurrentPos.x++;
             CurrentPos.x = MathUtil.clamp(CurrentPos.x, 0, MapsData[0].length - VisibleTileWidth);
-            trace(CurrentPos.x, MapsData[0].length);
             for (y in 0...VisibleTileHeight) {
-
                 // move tile
                 TileList[y][0].x = TileList[y][VisibleTileWidth - 1].x + TileSize;
                 TileList[y][0].texture = getTexture(Std.int(CurrentPos.x) + (VisibleTileWidth - 1), y);
@@ -104,18 +104,19 @@ class Tilemap_1 extends Scene {
             }
         }
 
-        // // check right side tile
-        // if (TileList[0][VisibleTileWidth - 1].x >= camera.x + VisibleTileWidth * TileSize) {
-        //     for (y in 0...VisibleTileHeight) {
-        //         // move tile
-        //         trace("start loop");
-        //         TileList[y][VisibleTileWidth - 1].x = TileList[y][0].x - TileSize;
-        //         TileList[y][VisibleTileWidth - 1].texture = getTexture(Math.floor((camera.x + 2) / TileSize), y);
+        // check right side tile
+        if (TileList[0][VisibleTileWidth - 1].x >= camera.x + VisibleTileWidth * TileSize) {
+            CurrentPos.x--;
+            CurrentPos.x = MathUtil.clamp(CurrentPos.x, 0, MapsData[0].length - VisibleTileWidth);
+            for (y in 0...VisibleTileHeight) {
+                // move tile
+                TileList[y][VisibleTileWidth - 1].x = TileList[y][0].x - TileSize;
+                TileList[y][VisibleTileWidth - 1].texture = getTexture(Std.int(CurrentPos.x), y);
 
-        //         // move tile in TileList
-        //         TileList[y].insert(0, TileList[y].pop());
-        //     }
-        // }
+                // move tile in TileList
+                TileList[y].insert(0, TileList[y].pop());
+            }
+        }
 
         // // check top side tile
         // if (TileList[0].y + TileSize < camera.y) {
