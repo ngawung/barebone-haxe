@@ -1,5 +1,7 @@
 package scene;
 
+import openfl.geom.Point;
+import lime.math.Rectangle;
 import starling.utils.MathUtil;
 import starling.textures.Texture;
 import starling.display.Quad;
@@ -13,6 +15,7 @@ class Tilemap_1 extends Scene {
 
     private var VisibleTileWidth:Int = 12;
     private var VisibleTileHeight:Int = 7;
+    private var visibleRegion:Point = new Point();
 
     private var MapsData:Array<String> = [];
     private var TileList:Array<Array<Image>> = [];
@@ -44,6 +47,8 @@ class Tilemap_1 extends Scene {
             }
             TileList.push(x_array);
         }
+
+        visibleRegion.setTo(MapsData[0].length * TileSize, MapsData.length * TileSize);
     }
     
     override public function init():Void {
@@ -56,6 +61,16 @@ class Tilemap_1 extends Scene {
         //     addChild(q);
         // }
 
+        // line helper
+        var q:Quad = new Quad(5, stage.stageWidth, 0xB8246E);
+        q.x = VisibleTileWidth * TileSize;
+        game.addChild(q);
+
+        var q2:Quad = new Quad(stage.stageWidth, 5, 0xB8246E);
+        q2.y = VisibleTileHeight * TileSize;
+        game.addChild(q2);
+
+        // array testing
         var a:Array<Int> = [0,1,2,3,4,5,6,7,8,9];
         a.insert(4, 99);
         trace(a.concat(a.splice(0, 5)));
@@ -68,34 +83,35 @@ class Tilemap_1 extends Scene {
         if (input.isHeld(Keyboard.A)) camera.x -= cameraSpeed;
         if (input.isHeld(Keyboard.D)) camera.x += cameraSpeed;
 
-        camera.x = MathUtil.clamp(camera.x, 0, MapsData[0].length * TileSize - stage.stageWidth);
-        camera.y = MathUtil.clamp(camera.y, 0, MapsData.length * TileSize);
+        camera.x = MathUtil.clamp(camera.x, 0, visibleRegion.x - VisibleTileWidth * TileSize);
+        camera.y = MathUtil.clamp(camera.y, 0, visibleRegion.y);
 
         // loop tile
 
         // check left side tile
-        if (TileList[0][0].x + TileSize < camera.x) {
+        if (TileList[0][0].x + TileSize <= camera.x) {
             for (y in 0...VisibleTileHeight) {
-                trace("loop ke", y);
                 // move tile
                 TileList[y][0].x = TileList[y][VisibleTileWidth - 1].x + TileSize;
-                TileList[y][0].texture = getTexture(Std.int((camera.x / TileSize) + VisibleTileWidth - 1), y);
+                TileList[y][0].texture = getTexture(Math.floor(camera.x / TileSize) + (VisibleTileWidth - 1), y);
 
                 // move tile in TileList
                 TileList[y].push(TileList[y].shift());
             }
         }
 
-        // // check right side tile
-        // if (TileList[VisibleTileWidth - 1].x > camera.x + stage.stageWidth) {
-        //     for (y in 0...VisibleTileHeight) {
-        //         // move tile
-        //         TileList[y * VisibleTileWidth + VisibleTileWidth - 1].x = TileList[y * VisibleTileWidth].x - TileSize;
+        // check right side tile
+        if (TileList[0][VisibleTileWidth - 1].x >= camera.x + VisibleTileWidth * TileSize) {
+            for (y in 0...VisibleTileHeight) {
+                // move tile
+                trace("start loop");
+                TileList[y][VisibleTileWidth - 1].x = TileList[y][0].x - TileSize;
+                TileList[y][VisibleTileWidth - 1].texture = getTexture(Math.floor((camera.x + 2) / TileSize), y);
 
-        //         // move tile in TileList
-        //         TileList.insert(y * VisibleTileWidth, TileList.splice(y * VisibleTileWidth + VisibleTileWidth - 1, 1)[0]);
-        //     }
-        // }
+                // move tile in TileList
+                TileList[y].insert(0, TileList[y].pop());
+            }
+        }
 
         // // check top side tile
         // if (TileList[0].y + TileSize < camera.y) {
@@ -120,7 +136,7 @@ class Tilemap_1 extends Scene {
     }
 
     private function getTexture(x:Int, y:Int):Texture {
-        trace(x, y);
+        trace(x, y, MapsData[y].charAt(x));
         switch(MapsData[y].charAt(x)) {
             case ".": return _ng.assetManager.getTexture("tile2");
             case "#": return _ng.assetManager.getTexture("tile1");
