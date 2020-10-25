@@ -1,5 +1,8 @@
 package scene;
 
+import starling.text.TextFieldAutoSize;
+import starling.text.BitmapFont;
+import starling.text.TextField;
 import openfl.geom.Point;
 import starling.utils.MathUtil;
 import starling.textures.Texture;
@@ -14,6 +17,7 @@ class Tilemap_1 extends Scene {
 
     private var VisibleTileWidth:Int = 12;
     private var VisibleTileHeight:Int = 7;
+    private var VisibleGhostTile:Int = 1;
     private var visibleRegion:Point = new Point();
 
     private var MapsData:Array<String> = [];
@@ -22,6 +26,8 @@ class Tilemap_1 extends Scene {
     private var StartPos:Point = new Point(0, 0);
     private var CurrentPos:Point = new Point();
     private var cameraSpeed:Int = 5;
+
+    private var logText:TextField = new TextField(0, 0, "");
 
     public function new() {
         super();
@@ -43,9 +49,9 @@ class Tilemap_1 extends Scene {
         MapsData.push("...3...................................");
         MapsData.push("...4...................................");
         
-        for(y in 0...VisibleTileHeight) {
+        for(y in 0...VisibleTileHeight + VisibleGhostTile) {
             var x_array:Array<Image> = [];
-            for(x in 0...VisibleTileWidth) {
+            for(x in 0...VisibleTileWidth + VisibleGhostTile) {
                 var img:Image = new Image(getTexture(x, y));
                 img.x = x * TileSize;
                 img.y = y * TileSize;
@@ -82,80 +88,114 @@ class Tilemap_1 extends Scene {
         var a:Array<Int> = [0,1,2,3,4,5,6,7,8,9];
         a.insert(4, 99);
         trace(a.concat(a.splice(0, 5)));
+
+        logText.format.setTo(BitmapFont.MINI, 32, 0x1f008d);
+        logText.autoSize = TextFieldAutoSize.BOTH_DIRECTIONS;
+        logText.x = logText.y = 5;
+        game.addChild(logText);
     }
 
     override public function update(dt:Float):Void {
         // controll camera
-        if (input.isHeld(Keyboard.W)) camera.y -= cameraSpeed;
-        if (input.isHeld(Keyboard.S)) camera.y += cameraSpeed;
-        if (input.isHeld(Keyboard.A)) camera.x -= cameraSpeed;
-        if (input.isHeld(Keyboard.D)) camera.x += cameraSpeed;
+        if (input.isHeld(Keyboard.W)) {
+            camera.y -= cameraSpeed;
+            updateTile("up");
+        }
+        if (input.isHeld(Keyboard.S)) {
+            camera.y += cameraSpeed;
+            updateTile("down");
+        }
+        if (input.isHeld(Keyboard.A)) {
+            camera.x -= cameraSpeed;
+            updateTile("left");
+        }
+        if (input.isHeld(Keyboard.D)) {
+            camera.x += cameraSpeed;
+            updateTile("right");
+        }
 
-        camera.x = MathUtil.clamp(camera.x, -(StartPos.x * TileSize), (MapsData[0].length - StartPos.x - VisibleTileWidth) * TileSize);
+        if (input.isHeld(Keyboard.SPACE)) game.scene = new Tilemap_1();
+
+        camera.x = MathUtil.clamp(camera.x, -(StartPos.x * TileSize), (MapsData[0].length - StartPos.x - VisibleTileWidth ) * TileSize);
         camera.y = MathUtil.clamp(camera.y, -(StartPos.y * TileSize), (MapsData.length - StartPos.y - VisibleTileHeight) * TileSize);
+        
+        // logText.text = "CamPos: " + (camera.x + (VisibleTileWidth) * TileSize);
+        // logText.text += "\nTilePos: " + (TileList[0][TileList[0].length - 1].x);
+        // logText.text += "\nCurPos: " + CurrentPos.x;
+        // logText.text += "\nRealCam: " + camera.x;
+    }
 
-        // loop tile
+    private function updateTile(pos:String):Void {
+        switch (pos) {
+            
+            case "left":
 
-        // check left side tile
-        if (TileList[0][0].x + TileSize <= camera.x) {
-            CurrentPos.x++;
-            CurrentPos.x = MathUtil.clamp(CurrentPos.x, 0, MapsData[0].length - VisibleTileWidth);
-            for (y in 0...VisibleTileHeight) {
-                // move tile
-                TileList[y][0].x = TileList[y][VisibleTileWidth - 1].x + TileSize;
-                TileList[y][0].texture = getTexture(Std.int(CurrentPos.x) + (VisibleTileWidth - 1), Std.int(y + CurrentPos.y));
+                // check right side tile
+                if (TileList[0][TileList[0].length - 1].x >= camera.x + (VisibleTileWidth) * TileSize) {
+                    CurrentPos.x--;
+                    CurrentPos.x = MathUtil.clamp(CurrentPos.x, -1, MapsData[0].length - (VisibleTileWidth));
+                    for (y in 0...TileList.length) {
+                        // move tile
+                        TileList[y][TileList[0].length - 1].x = TileList[y][0].x - TileSize;
+                        TileList[y][TileList[0].length - 1].texture = getTexture(Std.int(CurrentPos.x), Std.int(y + CurrentPos.y));
 
-                // move tile in TileList
-                TileList[y].push(TileList[y].shift());
-            }
+                        // move tile in TileList
+                        TileList[y].insert(0, TileList[y].pop());
+                    }
+                }
+
+            case "right":
+                // check left side tile
+                if (TileList[0][0].x + TileSize <= camera.x) {
+                    CurrentPos.x++;
+                    CurrentPos.x = MathUtil.clamp(CurrentPos.x, -1, MapsData[0].length - VisibleTileWidth);
+                    for (y in 0...TileList.length) {
+                        // move tile
+                        TileList[y][0].x = TileList[y][TileList[0].length - 1].x + TileSize;
+                        TileList[y][0].texture = getTexture(Std.int(CurrentPos.x) + VisibleTileWidth, Std.int(y + CurrentPos.y));
+
+                        // move tile in TileList
+                        TileList[y].push(TileList[y].shift());
+                    }
+                }
+            
+            
+            case "down":
+                // check top side tile
+                if (TileList[0][0].y + TileSize <= camera.y) {
+                    CurrentPos.y++;
+                    CurrentPos.y = MathUtil.clamp(CurrentPos.y, 0, MapsData.length - VisibleTileHeight);
+                    for (x in 0...VisibleTileWidth) {
+                        // move tile
+                        TileList[0][x].y = TileList[VisibleTileHeight - 1][x].y + TileSize;
+                        TileList[0][x].texture = getTexture(Std.int(x + CurrentPos.x), Std.int(CurrentPos.y) + (VisibleTileHeight - 1));
+                    }
+                    // move tile in TileList
+                    TileList.push(TileList.shift());
+                }
+            
+            case "up":
+                // check bottom side tile
+                if (TileList[VisibleTileHeight - 1][0].y >= camera.y + VisibleTileHeight * TileSize) {
+                    CurrentPos.y--;
+                    CurrentPos.y = MathUtil.clamp(CurrentPos.y, 0, MapsData.length - VisibleTileHeight);
+                    trace(CurrentPos.y);
+                    for (x in 0...VisibleTileWidth) {
+                        // move tile
+                        TileList[VisibleTileHeight - 1][x].y = TileList[0][x].y - TileSize;
+                        TileList[VisibleTileHeight - 1][x].texture = getTexture(Std.int(x + CurrentPos.x), Std.int(CurrentPos.y));
+                    }
+                    // move tile in TileList
+                    TileList.insert(0, TileList.pop());
+                }
+
         }
-
-        // check right side tile
-        if (TileList[0][VisibleTileWidth - 1].x >= camera.x + VisibleTileWidth * TileSize) {
-            CurrentPos.x--;
-            CurrentPos.x = MathUtil.clamp(CurrentPos.x, 0, MapsData[0].length - VisibleTileWidth);
-            for (y in 0...VisibleTileHeight) {
-                // move tile
-                TileList[y][VisibleTileWidth - 1].x = TileList[y][0].x - TileSize;
-                TileList[y][VisibleTileWidth - 1].texture = getTexture(Std.int(CurrentPos.x), Std.int(y + CurrentPos.y));
-
-                // move tile in TileList
-                TileList[y].insert(0, TileList[y].pop());
-            }
-        }
-
-        // check top side tile
-        if (TileList[0][0].y + TileSize <= camera.y) {
-            CurrentPos.y++;
-            CurrentPos.y = MathUtil.clamp(CurrentPos.y, 0, MapsData.length - VisibleTileHeight);
-            for (x in 0...VisibleTileWidth) {
-                // move tile
-                TileList[0][x].y = TileList[VisibleTileHeight - 1][x].y + TileSize;
-                TileList[0][x].texture = getTexture(Std.int(x + CurrentPos.x), Std.int(CurrentPos.y) + (VisibleTileHeight - 1));
-            }
-            // move tile in TileList
-            TileList.push(TileList.shift());
-        }
-
-        // check bottom side tile
-        if (TileList[VisibleTileHeight - 1][0].y >= camera.y + VisibleTileHeight * TileSize) {
-            CurrentPos.y--;
-            CurrentPos.y = MathUtil.clamp(CurrentPos.y, 0, MapsData.length - VisibleTileHeight);
-            trace(CurrentPos.y);
-            for (x in 0...VisibleTileWidth) {
-                // move tile
-                TileList[VisibleTileHeight - 1][x].y = TileList[0][x].y - TileSize;
-                TileList[VisibleTileHeight - 1][x].texture = getTexture(Std.int(x + CurrentPos.x), Std.int(CurrentPos.y));
-            }
-            // move tile in TileList
-            TileList.insert(0, TileList.pop());
-        }
-
     }
 
     private function getTexture(x:Int, y:Int):Texture {
         // trace(x, y, MapsData[y].charAt(x));
-        switch(MapsData[y].charAt(x)) {
+
+        switch(MapsData[y].split("")[x]) {
             case ".": return _ng.assetManager.getTexture("tile2");
             case "#": return _ng.assetManager.getTexture("tile1");
             case "1": return _ng.assetManager.getTexture("1");

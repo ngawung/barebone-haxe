@@ -1,6 +1,7 @@
 # TODO
 - [ ] catch error
 - [ ] basic logging system
+- [ ] ghosting tile
 - [ ]
 - [ ]
 
@@ -13,5 +14,6 @@
 - [x] camera + ghosting (no ghosting yet)
 
 # done
+- [x] basic tile scrolling map
 - [x] keyboard input
 - [x] game object
