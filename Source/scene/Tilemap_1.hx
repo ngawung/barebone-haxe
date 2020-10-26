@@ -133,7 +133,7 @@ class Tilemap_1 extends Scene {
                 // check right side tile
                 if (TileList[0][TileList[0].length - 1].x >= camera.x + (VisibleTileWidth) * TileSize) {
                     CurrentPos.x--;
-                    CurrentPos.x = MathUtil.clamp(CurrentPos.x, -1, MapsData[0].length - (VisibleTileWidth));
+                    CurrentPos.x = MathUtil.clamp(CurrentPos.x, -1, MapsData[0].length - VisibleTileWidth);
                     for (y in 0...TileList.length) {
                         // move tile
                         TileList[y][TileList[0].length - 1].x = TileList[y][0].x - TileSize;
@@ -164,11 +164,11 @@ class Tilemap_1 extends Scene {
                 // check top side tile
                 if (TileList[0][0].y + TileSize <= camera.y) {
                     CurrentPos.y++;
-                    CurrentPos.y = MathUtil.clamp(CurrentPos.y, 0, MapsData.length - VisibleTileHeight);
-                    for (x in 0...VisibleTileWidth) {
+                    CurrentPos.y = MathUtil.clamp(CurrentPos.y, -1, MapsData.length - VisibleTileHeight);
+                    for (x in 0...TileList[0].length) {
                         // move tile
-                        TileList[0][x].y = TileList[VisibleTileHeight - 1][x].y + TileSize;
-                        TileList[0][x].texture = getTexture(Std.int(x + CurrentPos.x), Std.int(CurrentPos.y) + (VisibleTileHeight - 1));
+                        TileList[0][x].y = TileList[TileList.length - 1][x].y + TileSize;
+                        TileList[0][x].texture = getTexture(Std.int(x + CurrentPos.x), Std.int(CurrentPos.y) + VisibleTileHeight);
                     }
                     // move tile in TileList
                     TileList.push(TileList.shift());
@@ -195,7 +195,9 @@ class Tilemap_1 extends Scene {
     private function getTexture(x:Int, y:Int):Texture {
         // trace(x, y, MapsData[y].charAt(x));
 
-        switch(MapsData[y].split("")[x]) {
+        if (y >= MapsData.length || y < 0 || x >= MapsData[0].length || x < 0) return _ng.assetManager.getTexture("tile2");
+
+        switch(MapsData[y].charAt(x)) {
             case ".": return _ng.assetManager.getTexture("tile2");
             case "#": return _ng.assetManager.getTexture("tile1");
             case "1": return _ng.assetManager.getTexture("1");
