@@ -26,28 +26,26 @@ class Tilemap_1 extends Scene {
     private var StartPos:Point = new Point(0, 0);
     private var CurrentPos:Point = new Point();
     private var cameraSpeed:Int = 5;
+    
+    private var player:Image;
+    private var playerSpeed:Int = 5;
 
     private var logText:TextField = new TextField(0, 0, "");
+    private var logQuad:Quad = new Quad(15, 15, 0xff00fa);
 
     public function new() {
         super();
 
-        MapsData.push("123456789..............................");
-        MapsData.push("2..##....123456789.....................");
-        MapsData.push("3##.........#####.123456789####........");
-        MapsData.push("4..........#####...........123456789...");
-        MapsData.push(".1#################.######....######123");
-        MapsData.push(".2.......#..........#.......####.......");
-        MapsData.push(".3.......#.##########....####..........");
-        MapsData.push(".4.......#..............####...........");
-        MapsData.push("..1......################..............");
-        MapsData.push("..2....................................");
-        MapsData.push("..3....................................");
-        MapsData.push("..4....................................");
-        MapsData.push("...1...................................");
-        MapsData.push("...2...................................");
-        MapsData.push("...3...................................");
-        MapsData.push("...4...................................");
+        MapsData.push(".......................................");
+        MapsData.push(".......................................");
+        MapsData.push("............#####..........####........");
+        MapsData.push("...........#####.......................");
+        MapsData.push("###################.######....#########");
+        MapsData.push(".........#..........#.......####.......");
+        MapsData.push(".........#.##########....####..........");
+        MapsData.push(".........#..............####...........");
+        MapsData.push(".........################..............");
+        MapsData.push(".......................................");
         
         for(y in 0...VisibleTileHeight + VisibleGhostTile) {
             var x_array:Array<Image> = [];
@@ -84,45 +82,54 @@ class Tilemap_1 extends Scene {
         q2.y = VisibleTileHeight * TileSize;
         game.addChild(q2);
 
-        // array testing
-        var a:Array<Int> = [0,1,2,3,4,5,6,7,8,9];
-        a.insert(4, 99);
-        trace(a.concat(a.splice(0, 5)));
+        player = new Image(_ng.assetManager.getTexture("player"));
+        player.pivotX = player.width / 2;
+        player.pivotY = player.height / 2;
+        player.x = 3 * TileSize + TileSize / 2;
+        player.y = 2 * TileSize + TileSize / 2;
+        addChild(player);
+
+        // // array testing
+        // var a:Array<Int> = [0,1,2,3,4,5,6,7,8,9];
+        // a.insert(4, 99);
+        // trace(a.concat(a.splice(0, 5)));
 
         logText.format.setTo(BitmapFont.MINI, 32, 0x1f008d);
         logText.autoSize = TextFieldAutoSize.BOTH_DIRECTIONS;
         logText.x = logText.y = 5;
         game.addChild(logText);
+
+        logQuad.pivotX = logQuad.pivotY = logQuad.width / 2;
+        addChild(logQuad);
     }
 
     override public function update(dt:Float):Void {
         // controll camera
-        if (input.isHeld(Keyboard.W)) {
-            camera.y -= cameraSpeed;
+        if (input.isDown(Keyboard.W)) {
+            checkCorner("up");
             updateTile("up");
+            player.y -= playerSpeed;
         }
-        if (input.isHeld(Keyboard.S)) {
-            camera.y += cameraSpeed;
+        if (input.isDown(Keyboard.S)) {
+            checkCorner("down");
             updateTile("down");
         }
         if (input.isHeld(Keyboard.A)) {
-            camera.x -= cameraSpeed;
+            checkCorner("left");
             updateTile("left");
         }
         if (input.isHeld(Keyboard.D)) {
-            camera.x += cameraSpeed;
+            checkCorner("right");
             updateTile("right");
         }
 
         if (input.isHeld(Keyboard.SPACE)) game.scene = new Tilemap_1();
 
+        camera.x = player.x - stage.stageWidth / 2;
+        camera.y = player.y - stage.stageHeight / 2;
+
         camera.x = MathUtil.clamp(camera.x, -(StartPos.x * TileSize), (MapsData[0].length - StartPos.x - VisibleTileWidth ) * TileSize);
         camera.y = MathUtil.clamp(camera.y, -(StartPos.y * TileSize), (MapsData.length - StartPos.y - VisibleTileHeight) * TileSize);
-        
-        // logText.text = "CamPos: " + (camera.x + (VisibleTileWidth) * TileSize);
-        // logText.text += "\nTilePos: " + (TileList[0][TileList[0].length - 1].x);
-        // logText.text += "\nCurPos: " + CurrentPos.x;
-        // logText.text += "\nRealCam: " + camera.x;
     }
 
     private function updateTile(pos:String):Void {
@@ -188,6 +195,32 @@ class Tilemap_1 extends Scene {
                     TileList.insert(0, TileList.pop());
                 }
 
+        }
+    }
+
+    private function checkCorner(direction:String):Void {
+        switch (direction) {
+            case "left":
+            case "right":
+            case "down":
+                var downLX:Int = Math.floor((player.x - player.width / 2) / TileSize);
+                var downLY:Int = Math.floor((player.y + (player.height / 2) + playerSpeed) / TileSize);
+                var downRX:Int = Math.floor((player.x + player.width) / TileSize);
+                var downRY:Int = Math.floor((player.y + player.height + playerSpeed) / TileSize);
+
+                logQuad.x = Math.floor((player.x - player.width / 2) / TileSize) * TileSize;
+                logQuad.y = Math.floor((player.y + (player.height / 2) + playerSpeed) / TileSize) * TileSize;
+
+                if (MapsData[downLY].charAt(downLX) == "#") {
+                    player.y = downLY * TileSize - player.height / 2;
+                    trace("snap");
+                // } else if (MapsData[downRY].charAt(downRX)  == "#") {
+
+                } else {
+                    player.y += playerSpeed;
+                }
+
+            case "up":
         }
     }
 
