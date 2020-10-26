@@ -131,7 +131,7 @@ class Tilemap_1 extends Scene {
             case "left":
 
                 // check right side tile
-                if (TileList[0][TileList[0].length - 1].x >= camera.x + (VisibleTileWidth) * TileSize) {
+                if (TileList[0][TileList[0].length - 1].x >= camera.x + VisibleTileWidth * TileSize) {
                     CurrentPos.x--;
                     CurrentPos.x = MathUtil.clamp(CurrentPos.x, -1, MapsData[0].length - VisibleTileWidth);
                     for (y in 0...TileList.length) {
@@ -176,14 +176,13 @@ class Tilemap_1 extends Scene {
             
             case "up":
                 // check bottom side tile
-                if (TileList[VisibleTileHeight - 1][0].y >= camera.y + VisibleTileHeight * TileSize) {
+                if (TileList[TileList.length - 1][0].y >= camera.y + VisibleTileHeight * TileSize) {
                     CurrentPos.y--;
-                    CurrentPos.y = MathUtil.clamp(CurrentPos.y, 0, MapsData.length - VisibleTileHeight);
-                    trace(CurrentPos.y);
-                    for (x in 0...VisibleTileWidth) {
+                    CurrentPos.y = MathUtil.clamp(CurrentPos.y, -1, MapsData.length - VisibleTileHeight);
+                    for (x in 0...TileList[0].length) {
                         // move tile
-                        TileList[VisibleTileHeight - 1][x].y = TileList[0][x].y - TileSize;
-                        TileList[VisibleTileHeight - 1][x].texture = getTexture(Std.int(x + CurrentPos.x), Std.int(CurrentPos.y));
+                        TileList[TileList.length - 1][x].y = TileList[0][x].y - TileSize;
+                        TileList[TileList.length - 1][x].texture = getTexture(Std.int(x + CurrentPos.x), Std.int(CurrentPos.y));
                     }
                     // move tile in TileList
                     TileList.insert(0, TileList.pop());
