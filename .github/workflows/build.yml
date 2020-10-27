@@ -26,6 +26,12 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
 
+      - name: Cache haxelib
+        uses: actions/cache@v2
+        with:
+          path: /haxelib
+          key: haxelib-cache
+
       - name: Install library
         run: |
           haxe --version
@@ -33,7 +39,13 @@ jobs:
           haxelib install openfl --always --quiet
           haxelib install lime --always --quiet
           haxelib git starling https://github.com/openfl/starling.git --always --quiet
-          echo "y" | haxelib run openfl setup
+          echo "y" | haxelib --always --quiet run openfl setup
 
       - name: Build
         run: haxelib run openfl build html5
+
+      - name: "Upload artefact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "html5"
+          path: Export/html5/bin
