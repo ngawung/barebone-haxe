@@ -36,7 +36,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: Export
-          key: haxelib-cache
+          key: export-cache
 
       - name: Install library
         run: |
@@ -53,7 +53,7 @@ jobs:
         run: |
           haxelib run openfl build html5
           haxelib run openfl build linux
-          haxelib run openfl build window
+          haxelib run openfl build windows
 
       - name: "Upload artefact"
         uses: actions/upload-artifact@v2
