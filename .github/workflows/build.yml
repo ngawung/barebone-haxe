@@ -40,6 +40,7 @@ jobs:
 
       - name: Install library
         run: |
+          apt-get update
           apt-get install build-essential -y
           haxe --version
           haxelib setup /haxelib
