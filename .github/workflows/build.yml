@@ -1,4 +1,4 @@
-name: CI
+name: Build html5
 
 on:
   push:
@@ -7,10 +7,10 @@ on:
       - 'README.md'
       - 'TODO.md'
   pull_request:
-    branches: ["*"]
     paths-ignore:
       - '.vscode'
       - 'README.md'
+      - 'TODO.md'
   release:
     types: [created]
 
@@ -29,9 +29,11 @@ jobs:
       - name: Install library
         run: |
           haxe --version
+          haxelib setup /haxelib
           haxelib install openfl --always
           haxelib install lime --always
           haxelib git starling https://github.com/openfl/starling.git --always
+          echo "y" | haxelib run openfl setup
 
-      - name: Build with lime
-        run: haxelib run lime build html5
+      - name: Build
+        run: openfl build html5
