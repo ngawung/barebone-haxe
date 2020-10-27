@@ -32,8 +32,15 @@ jobs:
           path: /haxelib
           key: haxelib-cache
 
+      - name: Cache Export
+        uses: actions/cache@v2
+        with:
+          path: Export
+          key: haxelib-cache
+
       - name: Install library
         run: |
+          apt-get install build-essential -y
           haxe --version
           haxelib setup /haxelib
           haxelib install openfl --always --quiet
