@@ -77,7 +77,10 @@ class MainEngine extends EventDispatcher {
 		// setup basic rectangle
 		// set basescreen fullscreen kalo blm diset
 		if (config.baseScreen.width <= 0) _baseRectangle.width = _viewport.width;
+		else _baseRectangle.width = config.baseScreen.width;
+		
 		if (config.baseScreen.height <= 0) _baseRectangle.height = _viewport.height;
+		else _baseRectangle.height = config.baseScreen.height;
 		
 		_screenRectangle.copyFrom(_viewport);
 		trace("base rect", _baseRectangle);
