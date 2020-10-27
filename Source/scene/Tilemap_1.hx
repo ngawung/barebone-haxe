@@ -36,10 +36,13 @@ class Tilemap_1 extends Scene {
     public function new() {
         super();
 
+        MapsData.push(".#....#....#...........................");
+        MapsData.push(".#....#....#...........................");
+        MapsData.push("...........................####........");
+        MapsData.push(".#....#....#...........................");
         MapsData.push(".......................................");
         MapsData.push(".......................................");
-        MapsData.push("............#####..........####........");
-        MapsData.push("...........#####.......................");
+        MapsData.push(".#....#....#####.......................");
         MapsData.push("###.##..###########.######....#########");
         MapsData.push(".........#..........#.......####.......");
         MapsData.push(".........#.##########....####..........");
@@ -105,7 +108,7 @@ class Tilemap_1 extends Scene {
 
     override public function update(dt:Float):Void {
         // controll camera
-        if (input.isDown(Keyboard.W)) {
+        if (input.isHeld(Keyboard.W)) {
             checkCorner("up");
             updateTile("up");
         }
@@ -116,12 +119,10 @@ class Tilemap_1 extends Scene {
         if (input.isHeld(Keyboard.A)) {
             checkCorner("left");
             updateTile("left");
-            player.x -= playerSpeed;
         }
         if (input.isHeld(Keyboard.D)) {
             checkCorner("right");
             updateTile("right");
-            player.x += playerSpeed;
         }
 
         if (input.isHeld(Keyboard.SPACE)) game.scene = new Tilemap_1();
@@ -202,7 +203,33 @@ class Tilemap_1 extends Scene {
     private function checkCorner(direction:String):Void {
         switch (direction) {
             case "left":
+                var upX:Int = Math.floor(((player.x - player.width / 2 ) - playerSpeed) / TileSize);
+                var upY:Int = Math.floor((player.y - (player.height / 2) + 1) / TileSize);
+                var downX:Int = Math.floor(((player.x - player.width / 2) - playerSpeed) / TileSize);
+                var downY:Int = Math.floor((player.y + (player.height / 2) - 1) / TileSize);
+
+                if (MapsData[upY].charAt(upX) == "#") {
+                    player.x = upX * TileSize + player.width / 2 + TileSize;
+                } else if (MapsData[downY].charAt(downX)  == "#") {
+                    player.x = downX * TileSize + player.width / 2 + TileSize;
+                } else {
+                    player.x -= playerSpeed;
+                }
+
             case "right":
+                var upX:Int = Math.floor(((player.x + player.width / 2 ) + playerSpeed) / TileSize);
+                var upY:Int = Math.floor((player.y - (player.height / 2) + 1) / TileSize);
+                var downX:Int = Math.floor(((player.x + player.width / 2) + playerSpeed) / TileSize);
+                var downY:Int = Math.floor((player.y + (player.height / 2) - 1) / TileSize);
+
+                if (MapsData[upY].charAt(upX) == "#") {
+                    player.x = upX * TileSize - player.width / 2;
+                } else if (MapsData[downY].charAt(downX)  == "#") {
+                    player.x = downX * TileSize - player.width / 2;
+                } else {
+                    player.x += playerSpeed;
+                }
+
             case "down":
                 var downLX:Int = Math.floor(((player.x - player.width / 2) + 1) / TileSize);
                 var downLY:Int = Math.floor((player.y + (player.height / 2) + playerSpeed) / TileSize);
@@ -222,9 +249,6 @@ class Tilemap_1 extends Scene {
                 var upLY:Int = Math.floor((player.y - (player.height / 2) - playerSpeed) / TileSize);
                 var upRX:Int = Math.floor(((player.x + player.width / 2) - 1) / TileSize);
                 var upRY:Int = Math.floor((player.y - (player.height / 2) - playerSpeed) / TileSize);
-
-                logQuad.x = (player.x - player.width / 2) + 1;
-                logQuad.y = (player.y - (player.height / 2) - playerSpeed);
 
                 if (MapsData[upLY].charAt(upLX) == "#") {
                     player.y = upLY * TileSize + player.height / 2 + TileSize;
