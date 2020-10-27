@@ -1,4 +1,4 @@
-name: Build html5
+name: Build Workflow
 
 on:
   push:
@@ -42,10 +42,25 @@ jobs:
           echo "y" | haxelib --always --quiet run openfl setup
 
       - name: Build
-        run: haxelib run openfl build html5
+        run: |
+          haxelib run openfl build html5
+          haxelib run openfl build linux
+          haxelib run openfl build window
 
       - name: "Upload artefact"
         uses: actions/upload-artifact@v2
         with:
           name: "html5"
           path: Export/html5/bin
+
+      - name: "Upload artefact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "linux"
+          path: Export/linux/bin
+
+      - name: "Upload artefact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "window"
+          path: Export/window/bin
