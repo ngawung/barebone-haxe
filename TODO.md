@@ -1,8 +1,7 @@
 # TODO
 - [ ] catch error
 - [ ] basic logging system
-- [ ] ghosting tile
-- [ ]
+- [ ] basic platformer logic
 - [ ]
 
 # Thing i need for future but not really need it rn
@@ -15,5 +14,6 @@
 
 # done
 - [x] basic tile scrolling map
+- [x] ghosting tile
 - [x] keyboard input
 - [x] game object

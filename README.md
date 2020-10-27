@@ -8,7 +8,7 @@ luckly there is starling port for haxe... so its haxe time
 - install haxe first [install haxe](https://haxe.org/download/linux/)
 - install openfl `haxelib install openfl`
 - setup openfl `haxelib run openfl setup`
-- install starling `haxelib install starling`
+- install starling `haxelib install starling` (use latest version from github)
 
 ## building
 - html5 run `lime build html5`
