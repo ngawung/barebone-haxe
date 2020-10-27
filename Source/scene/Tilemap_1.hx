@@ -125,7 +125,10 @@ class Tilemap_1 extends Scene {
             updateTile("right");
         }
 
-        if (input.isHeld(Keyboard.SPACE)) game.scene = new Tilemap_1();
+        if (input.isDown(Keyboard.SPACE)) {
+            game.scene = new Tilemap_1();
+            return;
+        }
 
         camera.x = player.x - stage.stageWidth / 2;
         camera.y = player.y - stage.stageHeight / 2;
