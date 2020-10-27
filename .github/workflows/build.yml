@@ -35,7 +35,7 @@ jobs:
       - name: Cache Export
         uses: actions/cache@v2
         with:
-          path: Export
+          path: {{ github.workspace }}/Export
           key: export-cache
 
       - name: Install library
