@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	
-	<meta title="BareboneHaxe" package="com.ngawung.barebonehaxe" version="1.0.0" company="Ngawung Game" />
-	<app main="Main" path="Export" file="BareboneHaxe" />
+	<meta title="BareboneHaxe" package="com.ngawung.barebonehaxe" version="1.0.0" company="Ngawung" />
+	<app main="Main" path="Export" file="BareboneHaxe" swf-version="32" />
 
 	<!-- ============== -->
 
-	<window width="800" height="480" orientation="portrait" background="0x666666" fps="60" />
+	<window width="800" height="480" orientation="landscape" background="0x666666" />
 	<window depth-buffer="true" stencil-buffer="true" />
+
+	<!-- <window resizable="false" unless="mobile || console" /> -->
 
 	<window if="html5" resizable="false" />
 	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
@@ -16,14 +18,14 @@
 	<!-- ============== -->
 
 	<source path="Source" />
-	<assets path="Assets" rename="assets" />
+	<assets path="Assets" rename="assets" embed="false" />
 
 	<!-- ============== -->
 	
 	<haxelib name="openfl" />
 	<haxelib name="starling" />
 
-	<haxelib name="hxcpp-debug-server" />
+	<!-- <haxelib name="hxcpp-debug-server" /> -->
 
 	<!-- ============== -->
 

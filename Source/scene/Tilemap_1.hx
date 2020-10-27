@@ -108,9 +108,8 @@ class Tilemap_1 extends Scene {
         if (input.isDown(Keyboard.W)) {
             checkCorner("up");
             updateTile("up");
-            player.y -= playerSpeed;
         }
-        if (input.isDown(Keyboard.S)) {
+        if (input.isHeld(Keyboard.S)) {
             checkCorner("down");
             updateTile("down");
         }
@@ -210,9 +209,6 @@ class Tilemap_1 extends Scene {
                 var downRX:Int = Math.floor(((player.x + player.width / 2) - 1) / TileSize);
                 var downRY:Int = Math.floor((player.y + (player.height / 2) + playerSpeed) / TileSize);
 
-                logQuad.x = Math.floor((player.x + player.width / 2) / TileSize) * TileSize;
-                logQuad.y = Math.floor((player.y + (player.height / 2) + playerSpeed) / TileSize) * TileSize;
-
                 if (MapsData[downLY].charAt(downLX) == "#") {
                     player.y = downLY * TileSize - player.height / 2;
                 } else if (MapsData[downRY].charAt(downRX)  == "#") {
@@ -222,6 +218,21 @@ class Tilemap_1 extends Scene {
                 }
 
             case "up":
+                var upLX:Int = Math.floor(((player.x - player.width / 2) + 1) / TileSize);
+                var upLY:Int = Math.floor((player.y - (player.height / 2) - playerSpeed) / TileSize);
+                var upRX:Int = Math.floor(((player.x + player.width / 2) - 1) / TileSize);
+                var upRY:Int = Math.floor((player.y - (player.height / 2) - playerSpeed) / TileSize);
+
+                logQuad.x = upLX * TileSize;
+                logQuad.y = upLY * TileSize;
+
+                if (MapsData[upLY].charAt(upLX) == "#") {
+                    player.y = upLY * TileSize - player.height / 2;// + TileSize;
+                } else if (MapsData[upRY].charAt(upRX)  == "#") {
+                    player.y = upRY * TileSize - player.height / 2;// + TileSize;
+                } else {
+                    player.y -= playerSpeed;
+                }
         }
     }
 

@@ -1,9 +1,10 @@
 package;
 
-import starling.assets.AssetType;
+import starling.utils.Max;
+import openfl.display.StageAlign;
+import openfl.display.StageScaleMode;
 import scene.Tilemap_1;
 import openfl.utils.Assets;
-import scene.Scene1;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import ngawung.events.NGEvent;
@@ -15,11 +16,30 @@ class Main extends Sprite {
 
 	public function new () {
 		super();
+
+		if (stage != null) onAddedToStage(null);
+		else addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+	}
+
+	private function onAddedToStage(event:Event):Void {
+		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		
+		stage.align = StageAlign.TOP_LEFT;
+		stage.scaleMode = StageScaleMode.NO_SCALE;
+
+		init();
+	}
+
+	private function init():Void {
 		_ng = MainEngine.instance;
+
+		// trace("stage size", stage.stageWidth, stage.stageHeight);
+		// trace("stage fullscreen", stage.fullScreenWidth, stage.fullScreenHeight);
 
 		// setup engine config
 		_ng.config.debug = true;
 		_ng.config.antialias = 1;
+		// _ng.config.baseScreen.setTo(0, 0, 800, 480);
 		_ng.config.viewportMode = ViewportMode.FULLSCREEN;
 
 		// setup event
