@@ -223,13 +223,13 @@ class Tilemap_1 extends Scene {
                 var upRX:Int = Math.floor(((player.x + player.width / 2) - 1) / TileSize);
                 var upRY:Int = Math.floor((player.y - (player.height / 2) - playerSpeed) / TileSize);
 
-                logQuad.x = upLX * TileSize;
-                logQuad.y = upLY * TileSize;
+                logQuad.x = (player.x - player.width / 2) + 1;
+                logQuad.y = (player.y - (player.height / 2) - playerSpeed);
 
                 if (MapsData[upLY].charAt(upLX) == "#") {
-                    player.y = upLY * TileSize - player.height / 2;// + TileSize;
+                    player.y = upLY * TileSize + player.height / 2 + TileSize;
                 } else if (MapsData[upRY].charAt(upRX)  == "#") {
-                    player.y = upRY * TileSize - player.height / 2;// + TileSize;
+                    player.y = upRY * TileSize + player.height / 2 + TileSize;
                 } else {
                     player.y -= playerSpeed;
                 }
