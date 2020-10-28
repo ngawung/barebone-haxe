@@ -32,16 +32,29 @@ jobs:
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
 
-      - name: Cache haxelib
+      - name: Cache haxelib (Linux)
         uses: actions/cache@v2
         with:
           path: ${{ github.workspace }}/haxelib
           key: haxelib-cache
+        if: matrix.os == 'ubuntu-latest'
+
+      - name: Cache haxelib (Windows)
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}\haxelib
+          key: haxelib-cache
+        if: matrix.os == 'windows-latest'
+
+      - run: haxelib setup ${{ github.workspace }}/haxelib
+        if: matrix.os == 'ubuntu-latest'
+
+      - run: haxelib setup ${{ github.workspace }}\haxelib
+        if: matrix.os == 'windows-latest'
 
       - name: Install library
         run: |
           haxe --version
-          haxelib setup ${{ github.workspace }}/haxelib
           haxelib install openfl --always --quiet
           haxelib install lime --always --quiet
           haxelib git starling https://github.com/openfl/starling.git --always --quiet
