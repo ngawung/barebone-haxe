@@ -21,7 +21,7 @@ jobs:
   install-library:
     strategy:
       matrix:
-        os: ["ubuntu-latest", "windows-latest"]
+        os: ["ubuntu-latest"]
     runs-on: ${{ matrix.os }}
     
     steps:
@@ -39,18 +39,18 @@ jobs:
           key: haxelib-cache
         if: matrix.os == 'ubuntu-latest'
 
-      - name: Cache haxelib (Windows)
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}\haxelib
-          key: haxelib-cache
-        if: matrix.os == 'windows-latest'
+      # - name: Cache haxelib (Windows)
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ${{ github.workspace }}\haxelib
+      #     key: haxelib-cache
+      #   if: matrix.os == 'windows-latest'
 
       - run: haxelib setup ${{ github.workspace }}/haxelib
         if: matrix.os == 'ubuntu-latest'
 
-      - run: haxelib setup ${{ github.workspace }}\haxelib
-        if: matrix.os == 'windows-latest'
+      # - run: haxelib setup ${{ github.workspace }}\haxelib
+      #   if: matrix.os == 'windows-latest'
 
       - name: Install library
         run: |
@@ -59,6 +59,12 @@ jobs:
           haxelib install lime --always --quiet
           haxelib git starling https://github.com/openfl/starling.git --always --quiet
           echo "y" | haxelib --always --quiet run openfl setup
+
+      - name: "Upload artefact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "haxelib"
+          path: ${{ github.workspace }}/haxelib
 
 ####################################
 
@@ -72,16 +78,21 @@ jobs:
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
 
-      - name: Cache haxelib
-        uses: actions/cache@v2
+      # - name: Cache haxelib
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ${{ github.workspace }}/haxelib
+      #     key: haxelib-cache
+
+      - uses: actions/download-artifact@v2
         with:
+          name: haxelib
           path: ${{ github.workspace }}/haxelib
-          key: haxelib-cache
 
       - name: Cache build file
         uses: actions/cache@v2
         with:
-          path: Export/html5/bin
+          path: Export/html5
           key: build-html5-cache
 
       - name: "Compile"
@@ -110,22 +121,27 @@ jobs:
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
 
-      - name: Cache haxelib
-        uses: actions/cache@v2
+      # - name: Cache haxelib
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ${{ github.workspace }}/haxelib
+      #     key: haxelib-cache
+
+      - uses: actions/download-artifact@v2
         with:
+          name: haxelib
           path: ${{ github.workspace }}/haxelib
-          key: haxelib-cache
 
       - name: Cache build file
         uses: actions/cache@v2
         with:
-          path: Export/linux/bin
+          path: Export/linux
           key: build-linux-${{ matrix.arch }}-cache
 
       - name: "Install build tools"
         run: |
           sudo apt-get update
-          sudo apt-get install build-essential g++-multilib -y
+          sudo apt-get install g++-multilib -y
         if: matrix.arch == 32
 
       - name: "Compile"
@@ -154,16 +170,21 @@ jobs:
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
 
-      - name: Cache haxelib
-        uses: actions/cache@v2
+      # - name: Cache haxelib
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ${{ github.workspace }}\haxelib
+      #     key: haxelib-cache
+
+      - uses: actions/download-artifact@v2
         with:
+          name: haxelib
           path: ${{ github.workspace }}\haxelib
-          key: haxelib-cache
 
       - name: Cache build file
         uses: actions/cache@v2
         with:
-          path: Export/windows/bin
+          path: Export/windows
           key: build-windows-${{ matrix.arch }}-cache
 
       - name: "Compile"
