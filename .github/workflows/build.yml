@@ -15,54 +15,23 @@ on:
     types: [created]
 
 jobs:
-  install-library:
+  build:
     runs-on: ubuntu-latest
-    container: haxe:latest
-    
     steps:
-      - name: "Checkout"
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Cache haxelib
-        uses: actions/cache@v2
+      - uses: krdlab/setup-haxe@v1
         with:
-          path: /haxelib
-          key: haxelib-cache
+          haxe-version: 4.1.4
 
-      - name: Install library
-        run: |
-          haxe --version
-          haxelib setup /haxelib
-          haxelib install openfl --always --quiet
-          haxelib install lime --always --quiet
-          haxelib git starling https://github.com/openfl/starling.git --always --quiet
-          echo "y" | haxelib --always --quiet run openfl setup
+      - run: haxe -version
+      - run: haxelib install openfl --always --quiet
+      - run: haxelib install lime --always --quiet
+      - run: haxelib git starling https://github.com/openfl/starling.git --always --quiet
+      - run: echo "y" | haxelib run openfl setup
 
-  build-html5:
-    needs: install-library
-    runs-on: ubuntu-latest
-    container: haxe:latest
-    
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v2
-
-      - name: Cache haxelib
-        uses: actions/cache@v2
-        with:
-          path: /haxelib
-          key: haxelib-cache
-
-      - name: Cache build file
-        uses: actions/cache@v2
-        with:
-          path: Export/html5
-          key: html5-cache
-
-      - name: "Build"
-        run: |
-          haxelib setup /haxelib
-          haxelib run openfl build html5
+      - name: "Compile"
+        run: haxelib run openfl build html5
 
       - name: "Upload artefact"
         uses: actions/upload-artifact@v2
@@ -70,71 +39,57 @@ jobs:
           name: "html5"
           path: Export/html5/bin
 
-  build-linux:
-    needs: install-library
-    runs-on: ubuntu-latest
-    container: haxe:latest
+  # install-library:
+  #   runs-on: ubuntu-latest
+  #   container: haxe:latest
     
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: "Checkout"
+  #       uses: actions/checkout@v2
 
-      - name: Cache haxelib
-        uses: actions/cache@v2
-        with:
-          path: /haxelib
-          key: haxelib-cache
+  #     - name: Cache haxelib
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: /haxelib
+  #         key: haxelib-cache
 
-      - name: Cache build file
-        uses: actions/cache@v2
-        with:
-          path: Export/linux
-          key: linux-cache
+  #     - name: Install library
+  #       run: |
+  #         haxe --version
+  #         haxelib setup /haxelib
+  #         haxelib install openfl --always --quiet
+  #         haxelib install lime --always --quiet
+  #         haxelib git starling https://github.com/openfl/starling.git --always --quiet
+  #         echo "y" | haxelib --always --quiet run openfl setup
 
-      - name: "Install build essential"
-        run: |
-          apt-get update
-          apt-get install build-essential -y
-
-      - name: "Build"
-        run: |
-          haxelib setup /haxelib
-          haxelib run openfl build linux
-
-      - name: "Upload artefact"
-        uses: actions/upload-artifact@v2
-        with:
-          name: "linux"
-          path: Export/linux/bin
-
-  build-windows:
-    needs: install-library
-    runs-on: windows-latest
-    container: haxe:latest
+  # build-html5:
+  #   needs: install-library
+  #   runs-on: ubuntu-latest
+  #   container: haxe:latest
     
-    steps:
-      - name: "Checkout"
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: "Checkout"
+  #       uses: actions/checkout@v2
 
-      - name: Cache haxelib
-        uses: actions/cache@v2
-        with:
-          path: /haxelib
-          key: haxelib-cache
+  #     - name: Cache haxelib
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: /haxelib
+  #         key: haxelib-cache
 
-      - name: Cache build file
-        uses: actions/cache@v2
-        with:
-          path: Export/windows
-          key: windows-cache
+  #     - name: Cache build file
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: Export/html5
+  #         key: html5-cache
 
-      - name: "Build"
-        run: |
-          haxelib setup /haxelib
-          haxelib run openfl build windows
+  #     - name: "Build"
+  #       run: |
+  #         haxelib setup /haxelib
+  #         haxelib run openfl build html5
 
-      - name: "Upload artefact"
-        uses: actions/upload-artifact@v2
-        with:
-          name: "windows"
-          path: Export/windows/bin
+  #     - name: "Upload artefact"
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: "html5"
+  #         path: Export/html5/bin
