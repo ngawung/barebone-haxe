@@ -33,7 +33,7 @@ jobs:
       - name: "Install libary"
         run: |
           haxe -version
-          haxe setup $GITHUB_WORKSPACE/haxelib
+          haxelib setup "$GITHUB_WORKSPACE"/haxelib
           haxelib install openfl --always --quiet
           haxelib install lime --always --quiet
           haxelib git starling https://github.com/openfl/starling.git --always --quiet
