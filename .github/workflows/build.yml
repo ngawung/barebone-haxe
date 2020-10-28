@@ -148,12 +148,12 @@ jobs:
       - name: Cache haxelib
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/haxelib
+          path: ${{ github.workspace }}\haxelib
           key: haxelib-cache
 
       - name: "Compile"
         run: |
-          haxelib setup ${{ github.workspace }}/haxelib
+          haxelib setup ${{ github.workspace }}\haxelib
           haxelib run openfl build windows -64
 
       - name: "Upload artefact"
@@ -175,12 +175,12 @@ jobs:
       - name: Cache haxelib
         uses: actions/cache@v2
         with:
-          path: ${{ github.workspace }}/haxelib
+          path: ${{ github.workspace }}\haxelib
           key: haxelib-cache
 
       - name: "Compile"
         run: |
-          haxelib setup ${{ github.workspace }}/haxelib
+          haxelib setup ${{ github.workspace }}\haxelib
           haxelib run openfl build windows -32
 
       - name: "Upload artefact"
