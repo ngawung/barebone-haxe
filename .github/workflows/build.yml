@@ -119,10 +119,10 @@ jobs:
           path: ${{ github.workspace }}/haxelib
           key: haxelib-cache
 
-      # - name: "Install build tools"
-      #   run: |
-      #     apt-get update
-      #     apt-get install build-essential g++-multilib -y
+      - name: "Install multilib"
+        run: |
+          apt-get update
+          apt-get install g++-multilib -y
 
       - name: "Compile"
         run: |
@@ -153,7 +153,7 @@ jobs:
 
       - name: "Compile"
         run: |
-          haxelib setup "$GITHUB_WORKSPACE"/haxelib
+          haxelib setup %GITHUB_WORKSPACE%/haxelib
           haxelib run openfl build windows -64
 
       - name: "Upload artefact"
@@ -180,7 +180,7 @@ jobs:
 
       - name: "Compile"
         run: |
-          haxelib setup "$GITHUB_WORKSPACE"/haxelib
+          haxelib setup %GITHUB_WORKSPACE%/haxelib
           haxelib run openfl build windows -32
 
       - name: "Upload artefact"
