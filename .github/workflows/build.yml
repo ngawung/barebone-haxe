@@ -19,7 +19,10 @@ env:
 
 jobs:
   install-library:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "window-latest"]
+    runs-on: ${{ matrix.os }}
     
     steps:
       - name: "Checkout"
@@ -74,6 +77,9 @@ jobs:
   build-linux:
     needs: install-library
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: ["32", "64"]
     steps:
       - uses: actions/checkout@v2
 
@@ -87,57 +93,28 @@ jobs:
           path: ${{ github.workspace }}/haxelib
           key: haxelib-cache
 
-      # - name: "Install build tools"
-      #   run: |
-      #     apt-get update
-      #     apt-get install build-essential -y
+      - name: "Install build tools"
+        run: |
+          apt-get update
+          apt-get install build-essential g++-multilib -y
 
       - name: "Compile"
         run: |
           haxelib setup ${{ github.workspace }}/haxelib
-          haxelib run openfl build linux -64
+          haxelib run openfl build linux -${{ matrix.arch }}
 
       - name: "Upload artefact"
         uses: actions/upload-artifact@v2
         with:
-          name: "linux_x64"
+          name: "linux_${{ matrix.os }}"
           path: Export/linux/bin
 
-  build-linux32:
-    needs: install-library
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: krdlab/setup-haxe@v1
-        with:
-          haxe-version: ${{ env.HAXE_VERSION }}
-
-      - name: Cache haxelib
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/haxelib
-          key: haxelib-cache
-
-      - name: "Install multilib"
-        run: |
-          sudo apt-get update
-          sudo apt-get install g++-multilib -y
-
-      - name: "Compile"
-        run: |
-          haxelib setup ${{ github.workspace }}/haxelib
-          haxelib run openfl build linux -32
-
-      - name: "Upload artefact"
-        uses: actions/upload-artifact@v2
-        with:
-          name: "linux_x86"
-          path: Export/linux/bin
-  
   build-windows:
     needs: install-library
     runs-on: windows-latest
+    strategy:
+      matrix:
+        arch: ["32", "64"]
     steps:
       - uses: actions/checkout@v2
 
@@ -154,38 +131,10 @@ jobs:
       - name: "Compile"
         run: |
           haxelib setup ${{ github.workspace }}\haxelib
-          haxelib run openfl build windows -64
+          haxelib run openfl build windows -${{ matrix.arch }}
 
       - name: "Upload artefact"
         uses: actions/upload-artifact@v2
         with:
-          name: "windows_x64"
+          name: "windows_${{ matrix.arch }}"
           path: Export/windows/bin
-  
-  build-windows32:
-    needs: install-library
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: krdlab/setup-haxe@v1
-        with:
-          haxe-version: ${{ env.HAXE_VERSION }}
-
-      - name: Cache haxelib
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}\haxelib
-          key: haxelib-cache
-
-      - name: "Compile"
-        run: |
-          haxelib setup ${{ github.workspace }}\haxelib
-          haxelib run openfl build windows -32
-
-      - name: "Upload artefact"
-        uses: actions/upload-artifact@v2
-        with:
-          name: "windows_x86"
-          path: Export/windows/bin
-
