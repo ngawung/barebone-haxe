@@ -109,7 +109,7 @@ jobs:
 
   build-windows:
     needs: install-library
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     container: haxe:latest
     
     steps:
