@@ -60,6 +60,8 @@ jobs:
           haxelib git starling https://github.com/openfl/starling.git --always --quiet
           echo "y" | haxelib --always --quiet run openfl setup
 
+####################################
+
   build-html5:
     needs: install-library
     runs-on: ubuntu-latest
@@ -76,6 +78,12 @@ jobs:
           path: ${{ github.workspace }}/haxelib
           key: haxelib-cache
 
+      - name: Cache build file
+        uses: actions/cache@v2
+        with:
+          path: Export/html5/bin
+          key: build-html5-cache
+
       - name: "Compile"
         run: |
           haxelib setup ${{ github.workspace }}/haxelib
@@ -86,6 +94,8 @@ jobs:
         with:
           name: "html5"
           path: Export/html5/bin
+
+####################################
 
   build-linux:
     needs: install-library
@@ -106,6 +116,12 @@ jobs:
           path: ${{ github.workspace }}/haxelib
           key: haxelib-cache
 
+      - name: Cache build file
+        uses: actions/cache@v2
+        with:
+          path: Export/linux/bin
+          key: build-linux-${{ matrix.arch }}-cache
+
       - name: "Install build tools"
         run: |
           sudo apt-get update
@@ -122,6 +138,8 @@ jobs:
         with:
           name: "linux_${{ matrix.os }}"
           path: Export/linux/bin
+
+####################################
 
   build-windows:
     needs: install-library
@@ -141,6 +159,12 @@ jobs:
         with:
           path: ${{ github.workspace }}\haxelib
           key: haxelib-cache
+
+      - name: Cache build file
+        uses: actions/cache@v2
+        with:
+          path: Export/windows/bin
+          key: build-windows-${{ matrix.arch }}-cache
 
       - name: "Compile"
         run: |
