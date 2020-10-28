@@ -24,11 +24,20 @@ jobs:
         with:
           haxe-version: 4.1.4
 
-      - run: haxe -version
-      - run: haxelib install openfl --always --quiet
-      - run: haxelib install lime --always --quiet
-      - run: haxelib git starling https://github.com/openfl/starling.git --always --quiet
-      - run: echo "y" | haxelib run openfl setup
+      - name: Cache haxelib
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/haxelib
+          key: haxelib-cache
+
+      - name: "Install libary"
+        run: |
+          haxe -version
+          haxe setup $GITHUB_WORKSPACE/haxelib
+          haxelib install openfl --always --quiet
+          haxelib install lime --always --quiet
+          haxelib git starling https://github.com/openfl/starling.git --always --quiet
+          echo "y" | haxelib run openfl setup
 
       - name: "Compile"
         run: haxelib run openfl build html5
