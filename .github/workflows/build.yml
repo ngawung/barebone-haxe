@@ -14,15 +14,20 @@ on:
   release:
     types: [created]
 
+env:
+  HAXE_VERSION: 4.1.4
+
 jobs:
-  build:
+  install-library:
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v2
+      - name: "Checkout"
+        uses: actions/checkout@v2
 
       - uses: krdlab/setup-haxe@v1
         with:
-          haxe-version: 4.1.4
+          haxe-version: ${{ env.HAXE_VERSION }}
 
       - name: Cache haxelib
         uses: actions/cache@v2
@@ -30,14 +35,30 @@ jobs:
           path: ${{ github.workspace }}/haxelib
           key: haxelib-cache
 
-      - name: "Install libary"
+      - name: Install library
         run: |
-          haxe -version
+          haxe --version
           haxelib setup "$GITHUB_WORKSPACE"/haxelib
           haxelib install openfl --always --quiet
           haxelib install lime --always --quiet
           haxelib git starling https://github.com/openfl/starling.git --always --quiet
-          echo "y" | haxelib run openfl setup
+          echo "y" | haxelib --always --quiet run openfl setup
+
+  build:
+    needs: install-library
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: ${{ env.HAXE_VERSION }}
+
+      - name: Cache haxelib
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/haxelib
+          key: haxelib-cache
 
       - name: "Compile"
         run: haxelib run openfl build html5
@@ -47,29 +68,6 @@ jobs:
         with:
           name: "html5"
           path: Export/html5/bin
-
-  # install-library:
-  #   runs-on: ubuntu-latest
-  #   container: haxe:latest
-    
-  #   steps:
-  #     - name: "Checkout"
-  #       uses: actions/checkout@v2
-
-  #     - name: Cache haxelib
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: /haxelib
-  #         key: haxelib-cache
-
-  #     - name: Install library
-  #       run: |
-  #         haxe --version
-  #         haxelib setup /haxelib
-  #         haxelib install openfl --always --quiet
-  #         haxelib install lime --always --quiet
-  #         haxelib git starling https://github.com/openfl/starling.git --always --quiet
-  #         echo "y" | haxelib --always --quiet run openfl setup
 
   # build-html5:
   #   needs: install-library
