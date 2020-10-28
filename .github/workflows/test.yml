@@ -1,0 +1,82 @@
+name: Test build
+
+on:
+  push:
+    branches:    
+      - '*'
+      - '*/*'
+      - '**'
+      - '!master'
+    paths-ignore:
+      - '.vscode'
+      - 'README.md'
+      - 'TODO.md'
+  pull_request:
+    branches:    
+      - '*'
+      - '*/*'
+      - '**'
+      - '!master'
+    paths-ignore:
+      - '.vscode'
+      - 'README.md'
+      - 'TODO.md'
+
+env:
+  HAXE_VERSION: 4.1.4
+
+jobs:
+  install-library:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: ${{ env.HAXE_VERSION }}
+
+      - name: Cache haxelib (Linux)
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/haxelib
+          key: haxelib-cache
+
+      - name: Install library
+        run: |
+          haxe --version
+          haxelib setup ${{ github.workspace }}/haxelib
+          haxelib install openfl --always --quiet
+          haxelib install lime --always --quiet
+          haxelib git starling https://github.com/openfl/starling.git --always --quiet
+          echo "y" | haxelib --always --quiet run openfl setup
+
+####################################
+
+  build-html5:
+    needs: install-library
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: ${{ env.HAXE_VERSION }}
+
+      - name: Cache haxelib
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/haxelib
+          key: haxelib-cache
+
+      - name: Cache build file
+        uses: actions/cache@v2
+        with:
+          path: Export/html5
+          key: build-html5-cache
+
+      - name: "Compile"
+        run: |
+          haxelib setup ${{ github.workspace }}/haxelib
+          haxelib run openfl build html5

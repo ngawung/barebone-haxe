@@ -2,17 +2,11 @@ name: Build Workflow
 
 on:
   push:
+    branches: ["master "]
     paths-ignore:
       - '.vscode'
       - 'README.md'
       - 'TODO.md'
-  pull_request:
-    paths-ignore:
-      - '.vscode'
-      - 'README.md'
-      - 'TODO.md'
-  release:
-    types: [created]
 
 env:
   HAXE_VERSION: 4.1.4
