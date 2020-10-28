@@ -62,7 +62,7 @@ jobs:
       - name: "Build"
         run: |
           haxelib setup /haxelib
-          haxelib run openfl build linux
+          haxelib run openfl build html5
 
       - name: "Upload artefact"
         uses: actions/upload-artifact@v2
@@ -106,3 +106,35 @@ jobs:
         with:
           name: "linux"
           path: Export/linux/bin
+
+  build-windows:
+    needs: install-library
+    runs-on: ubuntu-latest
+    container: haxe:latest
+    
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: Cache haxelib
+        uses: actions/cache@v2
+        with:
+          path: /haxelib
+          key: haxelib-cache
+
+      - name: Cache build file
+        uses: actions/cache@v2
+        with:
+          path: Export/windows
+          key: windows-cache
+
+      - name: "Build"
+        run: |
+          haxelib setup /haxelib
+          haxelib run openfl build windows
+
+      - name: "Upload artefact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "windows"
+          path: Export/windows/bin
