@@ -28,7 +28,6 @@ jobs:
       - uses: krdlab/setup-haxe@v1
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
-        run: haxelib setup "$GITHUB_WORKSPACE"/haxelib
 
       - name: Cache haxelib
         uses: actions/cache@v2
@@ -39,12 +38,13 @@ jobs:
       - name: Install library
         run: |
           haxe --version
+          haxelib setup "$GITHUB_WORKSPACE"/haxelib
           haxelib install openfl --always --quiet
           haxelib install lime --always --quiet
           haxelib git starling https://github.com/openfl/starling.git --always --quiet
           echo "y" | haxelib --always --quiet run openfl setup
 
-  build:
+  build-html5:
     needs: install-library
     runs-on: ubuntu-latest
     steps:
@@ -53,7 +53,6 @@ jobs:
       - uses: krdlab/setup-haxe@v1
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
-        run: haxelib setup "$GITHUB_WORKSPACE"/haxelib
 
       - name: Cache haxelib
         uses: actions/cache@v2
@@ -62,7 +61,9 @@ jobs:
           key: haxelib-cache
 
       - name: "Compile"
-        run: haxelib run openfl build html5
+        run: |
+          haxelib setup "$GITHUB_WORKSPACE"/haxelib
+          haxelib run openfl build html5
 
       - name: "Upload artefact"
         uses: actions/upload-artifact@v2
@@ -70,34 +71,121 @@ jobs:
           name: "html5"
           path: Export/html5/bin
 
-  # build-html5:
-  #   needs: install-library
-  #   runs-on: ubuntu-latest
-  #   container: haxe:latest
-    
-  #   steps:
-  #     - name: "Checkout"
-  #       uses: actions/checkout@v2
+  build-linux:
+    needs: install-library
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: Cache haxelib
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: /haxelib
-  #         key: haxelib-cache
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: ${{ env.HAXE_VERSION }}
 
-  #     - name: Cache build file
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: Export/html5
-  #         key: html5-cache
+      - name: Cache haxelib
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/haxelib
+          key: haxelib-cache
 
-  #     - name: "Build"
-  #       run: |
-  #         haxelib setup /haxelib
-  #         haxelib run openfl build html5
+      # - name: "Install build tools"
+      #   run: |
+      #     apt-get update
+      #     apt-get install build-essential -y
 
-  #     - name: "Upload artefact"
-  #       uses: actions/upload-artifact@v2
-  #       with:
-  #         name: "html5"
-  #         path: Export/html5/bin
+      - name: "Compile"
+        run: |
+          haxelib setup "$GITHUB_WORKSPACE"/haxelib
+          haxelib run openfl build linux -64
+
+      - name: "Upload artefact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "linux_x64"
+          path: Export/linux/bin
+
+  build-linux32:
+    needs: install-library
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: ${{ env.HAXE_VERSION }}
+
+      - name: Cache haxelib
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/haxelib
+          key: haxelib-cache
+
+      # - name: "Install build tools"
+      #   run: |
+      #     apt-get update
+      #     apt-get install build-essential g++-multilib -y
+
+      - name: "Compile"
+        run: |
+          haxelib setup "$GITHUB_WORKSPACE"/haxelib
+          haxelib run openfl build linux -32
+
+      - name: "Upload artefact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "linux_x86"
+          path: Export/linux/bin
+  
+  build-windows:
+    needs: install-library
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: ${{ env.HAXE_VERSION }}
+
+      - name: Cache haxelib
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/haxelib
+          key: haxelib-cache
+
+      - name: "Compile"
+        run: |
+          haxelib setup "$GITHUB_WORKSPACE"/haxelib
+          haxelib run openfl build windows -64
+
+      - name: "Upload artefact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "windows_x64"
+          path: Export/windows/bin
+  
+  build-windows32:
+    needs: install-library
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: ${{ env.HAXE_VERSION }}
+
+      - name: Cache haxelib
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/haxelib
+          key: haxelib-cache
+
+      - name: "Compile"
+        run: |
+          haxelib setup "$GITHUB_WORKSPACE"/haxelib
+          haxelib run openfl build windows -32
+
+      - name: "Upload artefact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "windows_x86"
+          path: Export/windows/bin
+
