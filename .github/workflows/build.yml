@@ -136,7 +136,7 @@ jobs:
       - name: "Upload artefact"
         uses: actions/upload-artifact@v2
         with:
-          name: "linux_${{ matrix.os }}"
+          name: "linux-${{ matrix.arch }}-bit"
           path: Export/linux/bin
 
 ####################################
@@ -174,5 +174,5 @@ jobs:
       - name: "Upload artefact"
         uses: actions/upload-artifact@v2
         with:
-          name: "windows_${{ matrix.arch }}"
+          name: "windows-${{ matrix.arch }}-bit"
           path: Export/windows/bin
