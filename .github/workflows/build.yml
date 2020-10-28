@@ -28,6 +28,7 @@ jobs:
       - uses: krdlab/setup-haxe@v1
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
+        run: haxelib setup "$GITHUB_WORKSPACE"/haxelib
 
       - name: Cache haxelib
         uses: actions/cache@v2
@@ -38,7 +39,6 @@ jobs:
       - name: Install library
         run: |
           haxe --version
-          haxelib setup "$GITHUB_WORKSPACE"/haxelib
           haxelib install openfl --always --quiet
           haxelib install lime --always --quiet
           haxelib git starling https://github.com/openfl/starling.git --always --quiet
@@ -53,6 +53,7 @@ jobs:
       - uses: krdlab/setup-haxe@v1
         with:
           haxe-version: ${{ env.HAXE_VERSION }}
+        run: haxelib setup "$GITHUB_WORKSPACE"/haxelib
 
       - name: Cache haxelib
         uses: actions/cache@v2
