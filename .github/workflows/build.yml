@@ -38,7 +38,7 @@ jobs:
       - name: Install library
         run: |
           haxe --version
-          haxelib setup "$GITHUB_WORKSPACE"/haxelib
+          haxelib setup ${{ github.workspace }}/haxelib
           haxelib install openfl --always --quiet
           haxelib install lime --always --quiet
           haxelib git starling https://github.com/openfl/starling.git --always --quiet
@@ -62,7 +62,7 @@ jobs:
 
       - name: "Compile"
         run: |
-          haxelib setup "$GITHUB_WORKSPACE"/haxelib
+          haxelib setup ${{ github.workspace }}/haxelib
           haxelib run openfl build html5
 
       - name: "Upload artefact"
@@ -94,7 +94,7 @@ jobs:
 
       - name: "Compile"
         run: |
-          haxelib setup "$GITHUB_WORKSPACE"/haxelib
+          haxelib setup ${{ github.workspace }}/haxelib
           haxelib run openfl build linux -64
 
       - name: "Upload artefact"
@@ -121,12 +121,12 @@ jobs:
 
       - name: "Install multilib"
         run: |
-          apt-get update
-          apt-get install g++-multilib -y
+          sudo apt-get update
+          sudo apt-get install g++-multilib -y
 
       - name: "Compile"
         run: |
-          haxelib setup "$GITHUB_WORKSPACE"/haxelib
+          haxelib setup ${{ github.workspace }}/haxelib
           haxelib run openfl build linux -32
 
       - name: "Upload artefact"
@@ -153,7 +153,7 @@ jobs:
 
       - name: "Compile"
         run: |
-          haxelib setup %GITHUB_WORKSPACE%/haxelib
+          haxelib setup ${{ github.workspace }}/haxelib
           haxelib run openfl build windows -64
 
       - name: "Upload artefact"
@@ -180,7 +180,7 @@ jobs:
 
       - name: "Compile"
         run: |
-          haxelib setup %GITHUB_WORKSPACE%/haxelib
+          haxelib setup ${{ github.workspace }}/haxelib
           haxelib run openfl build windows -32
 
       - name: "Upload artefact"
