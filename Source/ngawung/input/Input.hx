@@ -6,11 +6,13 @@ import openfl.Vector;
 
 class Input {
     private var _ng:MainEngine;
+    public var enable:Bool;
     public var keyState:Vector<Int>;
 
     public function new() {
         _ng = MainEngine.instance;
 
+        enable = true;
         keyState = new Vector<Int>(256, true);
 
         addListener();
@@ -23,6 +25,7 @@ class Input {
 
     // Updated by Game engine
     public function update(dt:Float):Void {
+        if (!enable) return;
         for (i in 0...keyState.length) {
             if (keyState[i] != 0) keyState[i]++;
         }
@@ -30,13 +33,18 @@ class Input {
 
     private function onKeyDown(e:KeyboardEvent):Void {
         var code:Int = e.keyCode;
+        if (code > keyState.length || code < 0) return;
+
         // update keys, set keyState to 1 or >1 if hold
         keyState[code] = Std.int(Math.max(keyState[code], 1));
     }
 
     private function onKeyUp(e:KeyboardEvent):Void {
+        var code:Int = e.keyCode;
+        if (code > keyState.length || code < 0) return;
+
         // set keyState to -1
-        keyState[e.keyCode] = -1;
+        keyState[code] = -1;
     }
 
     // get key status
