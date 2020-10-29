@@ -1,6 +1,6 @@
 package;
 
-import starling.utils.Max;
+import scene.Blank;
 import openfl.display.StageAlign;
 import openfl.display.StageScaleMode;
 import scene.Tilemap_1;
@@ -40,6 +40,7 @@ class Main extends Sprite {
 		_ng.config.debug = true;
 		_ng.config.antialias = 1;
 		// _ng.config.baseScreen.setTo(0, 0, 800, 480);
+		_ng.config.baseScreen.setTo(0, 0, 768, 448);
 		_ng.config.viewportMode = ViewportMode.FULLSCREEN;
 
 		// setup event
@@ -64,7 +65,7 @@ class Main extends Sprite {
 		
 		_ng.assetManager.loadQueue(function():Void {
 			// _ng.assetManager.addAsset("atlas", Assets.getPath("assets/atlas.png"), AssetType.TEXTURE_ATLAS);
-			_ng.gameRoot.scene = new Tilemap_1();
+			_ng.gameRoot.scene = new Blank();
 		});
 	}
 	

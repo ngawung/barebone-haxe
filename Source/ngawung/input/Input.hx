@@ -6,7 +6,7 @@ import openfl.Vector;
 
 class Input {
     private var _ng:MainEngine;
-    public var enable:Bool;
+    private var enable:Bool; // this input class is global and should not disabled...
     public var keyState:Vector<Int>;
 
     public function new() {
