@@ -39,7 +39,7 @@ class Main extends Sprite {
 		// setup engine config
 		_ng.config.debug = true;
 		_ng.config.antialias = 1;
-		_ng.config.baseScreen.setTo(0, 0, 800, 480);
+		// _ng.config.baseScreen.setTo(0, 0, 800, 480);
 		_ng.config.viewportMode = ViewportMode.FULLSCREEN;
 
 		// setup event

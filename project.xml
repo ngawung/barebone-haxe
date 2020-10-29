@@ -6,7 +6,7 @@
 
 	<!-- ============== -->
 
-	<window width="800" height="480" orientation="landscape" background="0x666666" fps="60" />
+	<window width="768" height="448" orientation="landscape" background="0x666666" fps="60" />
 	<window depth-buffer="true" stencil-buffer="true" />
 
 	<!-- <window resizable="false" unless="mobile || console" /> -->
