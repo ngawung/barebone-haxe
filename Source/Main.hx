@@ -1,10 +1,6 @@
 package;
 
 import scene.tilemap_2.Tilemap_2;
-<<<<<<< HEAD
-=======
-import scene.Blank;
->>>>>>> master
 import openfl.display.StageAlign;
 import openfl.display.StageScaleMode;
 import openfl.utils.Assets;
