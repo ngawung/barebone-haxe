@@ -1,12 +1,9 @@
 package scene;
 
 import starling.utils.MathUtil;
-import starling.events.Touch;
 import starling.events.TouchPhase;
 import openfl.ui.Keyboard;
-import openfl.events.TextEvent;
 import openfl.events.Event;
-import openfl.text.TextFormat;
 import openfl.events.FocusEvent;
 import openfl.text.TextFieldType;
 import starling.events.TouchEvent;
