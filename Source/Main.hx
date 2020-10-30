@@ -1,9 +1,8 @@
 package;
 
-import scene.Blank;
+import scene.tilemap_2.Tilemap_2;
 import openfl.display.StageAlign;
 import openfl.display.StageScaleMode;
-import scene.Tilemap_1;
 import openfl.utils.Assets;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -64,8 +63,7 @@ class Main extends Sprite {
 
 		
 		_ng.assetManager.loadQueue(function():Void {
-			// _ng.assetManager.addAsset("atlas", Assets.getPath("assets/atlas.png"), AssetType.TEXTURE_ATLAS);
-			_ng.gameRoot.scene = new Blank();
+			_ng.gameRoot.scene = new Tilemap_2();
 		});
 	}
 	
