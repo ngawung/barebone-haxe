@@ -22,7 +22,7 @@ class Config {
     /**
      * Base screen size. default 800x480
      */
-    public var baseScreen:Rectangle; 
+    public var baseScreen:Rectangle;
 
     /**
      * this automatically constructed by the engine
