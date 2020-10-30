@@ -173,14 +173,10 @@ class Blank extends Scene {
     private function consoleInputLog(direction:String):Void {
         if (isFocus) _ng.starling.nativeOverlay.stage.focus = null;
 
-
         if (direction == "up") console_inputPos--;
         else console_inputPos++;
 
         console_inputPos = Std.int(MathUtil.clamp(console_inputPos, 0, console_inputLog.length - 1));
-
-        trace(console_inputPos, console_inputLog[console_inputPos]);
-
         console_inputtext.text = console_inputLog[console_inputPos];
 
         consoleFocusIn();

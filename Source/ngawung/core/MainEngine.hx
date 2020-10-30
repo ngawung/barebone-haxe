@@ -1,5 +1,6 @@
 package ngawung.core;
 
+import ngawung.utils.Console;
 import starling.utils.Max;
 import ngawung.utils.Config;
 import openfl.display.Stage;
@@ -23,6 +24,7 @@ class MainEngine extends EventDispatcher {
 	public var starling(default, null):Starling;
 	public var gameRoot(get, default):Game;
 	public var assetManager(default, null):AssetManager;
+	public var console:Console;
 	
 	private var _isMobile:Bool;
 	private var _stage:Stage;
@@ -34,6 +36,7 @@ class MainEngine extends EventDispatcher {
 	private function new() {
 		super();
 		config = new Config();
+		console = new Console();
 	}
 
 	/**
