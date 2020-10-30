@@ -46,6 +46,10 @@ class Scene extends Sprite {
         
     }
 
+    public function resize():Void {
+        
+    }
+
     public function destroy(dispose:Bool = false):Void {
         camera.destroy();
         // destroy physic

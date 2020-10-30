@@ -30,6 +30,10 @@ class Game extends Sprite {
 		dispatchEvent(new Event(NGEvent.GAME_INIT));
 	}
 
+	public function resize():Void {
+		if (scene != null) scene.resize();
+	}
+
 	public function onEnterFrame(e:EnterFrameEvent):Void {
 		if (scene != null) scene.preUpdate(e.passedTime);
 

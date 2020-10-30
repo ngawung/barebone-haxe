@@ -111,6 +111,8 @@ class MainEngine extends EventDispatcher {
 				starling.stage.stageWidth = Std.int(_screenRectangle.width / baseRatioWidth);
 				starling.stage.stageHeight = Std.int(_screenRectangle.height / baseRatioHeight);
 		}
+
+		gameRoot.resize();
 	}
 	
 	private function handleStarlingReady():Void {
