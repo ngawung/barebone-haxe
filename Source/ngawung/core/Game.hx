@@ -31,7 +31,7 @@ class Game extends Sprite {
 	}
 
 	public function resize():Void {
-		if (scene != null) scene.resize();
+		if (scene != null) scene.preResize();
 	}
 
 	public function onEnterFrame(e:EnterFrameEvent):Void {

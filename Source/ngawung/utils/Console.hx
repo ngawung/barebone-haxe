@@ -53,7 +53,7 @@ class Console extends Sprite {
 
     private function drawConsole():Void {
         bg = new Quad(stage.stageWidth, stage.stageHeight, 0x000000);
-        bg.alpha = 0.4;
+        bg.alpha = 0.7;
 
         log_text = new TextField(stage.stageWidth - 10, 0, "");
         log_text.format.setTo(BitmapFont.MINI, 16, 0xFFFFFF, Align.LEFT, Align.TOP);

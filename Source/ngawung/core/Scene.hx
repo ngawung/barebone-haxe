@@ -38,6 +38,21 @@ class Scene extends Sprite {
         update(dt);
     }
 
+    public function preResize():Void {
+        // resize child that implement atom
+        for (child in __children) {
+            if (Std.isOfType(child, Atom)) cast(child, Atom).resize();
+        }
+
+        resize();
+    }
+
+    public function cameraPreUpdate():Void {
+        cameraUpdate();
+    }
+
+    // ###############
+
     public function init():Void {
         
     }
@@ -50,12 +65,19 @@ class Scene extends Sprite {
         
     }
 
+    public function cameraUpdate():Void {
+        
+    }
+
     public function destroy(dispose:Bool = false):Void {
         camera.destroy();
         // destroy physic
 
         removeFromParent(dispose);
     }
+
+    // ###############
+    
 
     // override function
 

@@ -21,6 +21,10 @@ class TileAtom extends Image implements Atom {
         
     }
 
+    public function resize():Void {
+        
+    }
+
     // GET && SET
 
     private function get__ng():MainEngine { return MainEngine.instance; }

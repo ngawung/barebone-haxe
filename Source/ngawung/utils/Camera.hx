@@ -70,6 +70,8 @@ class Camera {
         
         if (_ng.gameRoot.scene.transformationMatrix.toString() == matrix.toString()) return;
         _ng.gameRoot.scene.transformationMatrix = matrix;
+
+        _ng.gameRoot.scene.cameraPreUpdate();
     }
 
     /**
