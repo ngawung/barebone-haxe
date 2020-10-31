@@ -5,12 +5,16 @@ import starling.display.Image;
 import ngawung.display.Atom;
 
 class TileAtom extends Image implements Atom {
+    private var config:TileConfig;
+
     private var _ng(get, null):MainEngine;
     public var TileId(default, null):String;
 
     public function new(config:TileConfig) {
         super(_ng.assetManager.getTexture(config.textureName));
         TileId = config.tileId;
+
+        this.config = config;
     }
 
     public function update(dt:Float):Void {
@@ -23,6 +27,14 @@ class TileAtom extends Image implements Atom {
 
     public function resize():Void {
         
+    }
+
+    // ###########
+
+    public function setTo(config:TileConfig) {
+        this.texture = _ng.assetManager.getTexture(config.textureName);
+        this.TileId = config.tileId;
+        this.config = config;
     }
 
     // GET && SET
