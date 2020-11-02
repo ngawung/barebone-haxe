@@ -15,6 +15,8 @@ class TileLayer extends Sprite implements Atom {
 
     private var VisibleTileWidth:Int;
     private var VisibleTileHeight:Int;
+    private var VisibleTileHeight_clamp:Int;
+    private var VisibleTileWidth_clamp:Int;
     private var VisibleGhostTile:Int = 0;
 
     private var pos_tile1:Point = new Point();
@@ -38,7 +40,7 @@ class TileLayer extends Sprite implements Atom {
         removeEventListener(Event.ADDED_TO_STAGE, onAdded);
         SceneRoot = cast(parent, Scene);
         
-        resize();
+        initTile();
     }
 
     public function update(dt:Float):Void {
@@ -51,34 +53,24 @@ class TileLayer extends Sprite implements Atom {
 
     // #######
 
-    public function resize():Void {
+    private function calculateVisibleTile() {
         // updateVisibleTile
         VisibleTileWidth = Std.int(Math.floor(stage.stageWidth / config.tile_size));
         VisibleTileHeight = Std.int(Math.floor(stage.stageHeight / config.tile_size));
         
-        // trace("VisibleTile:", VisibleTileWidth, VisibleTileHeight);
+        // calculate new VisisbleTile
+        VisibleTileHeight_clamp = Std.int(MathUtil.clamp((VisibleTileHeight + VisibleGhostTile), 0, config.MapData.length));
+        VisibleTileWidth_clamp = Std.int(MathUtil.clamp((VisibleTileWidth + VisibleGhostTile), 0, config.MapData[0].length));
+    }
 
-        if (TileList.length != 0) {
-            if (TileList[0].length != 0) {
-                // return if no need change
-                if (TileList.length == VisibleTileHeight || TileList[0].length == VisibleTileHeight) return;
-        
-                // destroy all TileList
-                for(y in 0...TileList.length) {
-                    for(x in 0...TileList[0].length) {
-                        TileList[y][x].destroy(true);
-                    }
-                }
-            }
-        }
-
-        var newVisibleHeight:Int = Std.int(MathUtil.clamp((VisibleTileHeight + VisibleGhostTile), 0, config.MapData.length));
-        var newVisibleWidth:Int = Std.int(MathUtil.clamp((VisibleTileWidth + VisibleGhostTile), 0, config.MapData[0].length));
+    private function initTile():Void {
+        // calculate new VisibleTile
+        calculateVisibleTile();   
 
         // add tile to TileList
-        for(y in 0...newVisibleHeight) {
+        for(y in 0...VisibleTileHeight_clamp) {
             var x_array:Array<TileAtom> = [];
-            for(x in 0...newVisibleWidth) {
+            for(x in 0...VisibleTileWidth_clamp) {
                 var conf:TileConfig = config.tile_config.filter(function(data) { return data.tileId == config.MapData[y].charAt(x); })[0];
                 
                 var tile:TileAtom = new TileAtom(conf);
@@ -88,6 +80,56 @@ class TileLayer extends Sprite implements Atom {
                 addChild(tile);
             }
             TileList.push(x_array);
+        }
+
+        updatePos();
+    }
+
+    // #######
+
+    public function resize():Void {
+        // calculate new VisibleTile
+        calculateVisibleTile();        
+
+        // update TileList size
+
+        if (TileList.length < VisibleTileHeight_clamp) {
+            for (y in 0...(VisibleTileHeight_clamp - TileList.length)) {
+                var x_array:Array<TileAtom> = [];
+                for (x in 0...TileList[0].length) {
+                    var tile:TileAtom = new TileAtom();
+                    x_array.push(tile);
+                    addChild(tile);
+                }
+                TileList.push(x_array);
+            }
+        }
+
+        if (TileList.length > VisibleTileHeight_clamp) {
+            for (y in 0...(TileList.length - VisibleTileHeight_clamp)) {
+                var x_array:Array<TileAtom> = TileList.pop();
+                for (x in 0...x_array.length) {
+                    x_array[x].destroy(true);
+                }
+            }
+        }
+
+        if (TileList[0].length < VisibleTileWidth_clamp) {
+            for (y in 0...TileList.length) {
+                for (x in 0...(VisibleTileWidth_clamp - TileList[0].length)) {
+                    var tile:TileAtom = new TileAtom();
+                    TileList[y].push(tile);
+                    addChild(tile);
+                }
+            }
+        }
+
+        if (TileList[0].length > VisibleTileWidth_clamp) {
+            for (y in 0...TileList.length) {
+                for (x in 0...(TileList[0].length - VisibleTileWidth_clamp)) {
+                    TileList[y].pop().destroy(true);
+                }
+            }
         }
 
         // trace(TileList[0][0].x, TileList[0][0].y);

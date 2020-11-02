@@ -10,11 +10,13 @@ class TileAtom extends Image implements Atom {
     private var _ng(get, null):MainEngine;
     public var TileId(default, null):String;
 
-    public function new(config:TileConfig) {
-        super(_ng.assetManager.getTexture(config.textureName));
-        TileId = config.tileId;
-
+    public function new(config:TileConfig = null) {
+        if (config == null) this.config = new TileConfig();
         this.config = config;
+
+        super(_ng.assetManager.getTexture(this.config.textureName));
+        TileId = this.config.tileId;
+
     }
 
     public function update(dt:Float):Void {

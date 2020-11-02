@@ -6,7 +6,7 @@ class TileConfig {
 
     public var isAnimated(default, null):Bool;
 
-    public function new(tileId:String, textureName:String, isAnimated:Bool = false) {
+    public function new(tileId:String = "-1", textureName:String = "empty", isAnimated:Bool = false) {
         this.tileId = tileId;
         this.textureName = textureName;
         this.isAnimated = isAnimated;
