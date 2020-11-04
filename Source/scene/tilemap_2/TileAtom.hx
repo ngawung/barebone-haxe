@@ -3,7 +3,6 @@ package scene.tilemap_2;
 import ngawung.utils.Camera;
 import ngawung.core.MainEngine;
 import starling.display.Image;
-import ngawung.display.Atom;
 
 class TileAtom extends Image {
     private var _ng(get, null):MainEngine;
@@ -18,7 +17,7 @@ class TileAtom extends Image {
         tile_id = tileId;
     }
 
-    public function isInBound(camera:Camera):Bool {
+    public function isInBound(camX:Int, camY:Int, sW:Int, sH:Int):Bool {
 
         return true;
     }
