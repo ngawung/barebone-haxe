@@ -71,8 +71,8 @@ class Tilemap_2 extends Scene {
     }
 
     override function cameraUpdate() {
-        layer.clampCamera();
-        layer.updatePos();
+        // layer.clampCamera();
+        // layer.updatePos();
     }
 
 }

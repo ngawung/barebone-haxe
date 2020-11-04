@@ -85,11 +85,9 @@ class TileLayer extends Sprite implements Atom {
         // add tile to TileList
         for (y in 0...VisibleTileHeight_clamp) {
             for (x in 0...VisibleTileWidth_clamp) {
-                var tile:TileAtom = new TileAtom(
-                    '${cameraPosX + x}:${cameraPosY + y}',
-                    config.MapData[y].charAt(x),
-                    config.getTextureNameMap(x, y)
-                );
+                var tile:TileAtom = new TileAtom('${cameraPosX + x}:${cameraPosY + y}', config.MapData[y].charAt(x), config.getTextureNameMap(x, y));
+                tile.x = (cameraPosX + x) * config.tile_size;
+                tile.y = (cameraPosY + y) * config.tile_size;
                 TileList.push(tile);
                 addChild(tile);
             }
