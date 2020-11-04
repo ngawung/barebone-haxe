@@ -24,7 +24,7 @@ class TileLayer extends Sprite implements Atom {
     private var pos_cam1:Point = new Point();
     private var pos_cam2:Point = new Point();
 
-    private var TileList:Array<Array<TileAtom>> = [];
+    private var TileList:Array<TileAtom> = [];
     
     public function new(config:MapConfig) {
         super();
@@ -45,10 +45,21 @@ class TileLayer extends Sprite implements Atom {
 
     public function update(dt:Float):Void {
 
+        // check if tile is inside camera
+        // for (i in 0...TileList.length) {
+        //     // TileList[i].isInBound();
+        // }
+
+        // update new tile if any
+        //
+        //
     }
 
     public function destroy(removeFromParent:Bool = false):Void {
+        // destroy every tile in TileList
+        for (i in 0...TileList.length) TileList[i].destroy(removeFromParent);
 
+        // some cleanup here
     }
 
     // #######
@@ -65,115 +76,115 @@ class TileLayer extends Sprite implements Atom {
 
     private function initTile():Void {
         // calculate new VisibleTile
-        calculateVisibleTile();   
+        calculateVisibleTile();
+
+        // get current camera tile position
+        var cameraPosX:Int = Std.int(Math.floor(SceneRoot.camera.x / config.tile_size));
+        var cameraPosY:Int = Std.int(Math.floor(SceneRoot.camera.y / config.tile_size));
 
         // add tile to TileList
-        for(y in 0...VisibleTileHeight_clamp) {
-            var x_array:Array<TileAtom> = [];
-            for(x in 0...VisibleTileWidth_clamp) {
-                var conf:TileConfig = config.tile_config.filter(function(data) { return data.tileId == config.MapData[y].charAt(x); })[0];
-                
-                var tile:TileAtom = new TileAtom(conf);
-                tile.x = x * config.tile_size;
-                tile.y = y * config.tile_size;
-                x_array.push(tile);
+        for (y in 0...VisibleTileHeight_clamp) {
+            for (x in 0...VisibleTileWidth_clamp) {
+                var tile:TileAtom = new TileAtom(
+                    '${cameraPosX + x}:${cameraPosY + y}',
+                    config.MapData[y].charAt(x),
+                    config.getTextureNameMap(x, y)
+                );
+                TileList.push(tile);
                 addChild(tile);
             }
-            TileList.push(x_array);
         }
-
-        updatePos();
     }
 
     // #######
 
     public function resize():Void {
-        // calculate new VisibleTile
-        calculateVisibleTile();        
+        // // calculate new VisibleTile
+        // calculateVisibleTile();        
 
-        // update TileList size
+        // // update TileList size
 
-        if (TileList.length < VisibleTileHeight_clamp) {
-            for (y in 0...(VisibleTileHeight_clamp - TileList.length)) {
-                var x_array:Array<TileAtom> = [];
-                for (x in 0...TileList[0].length) {
-                    var tile:TileAtom = new TileAtom();
-                    x_array.push(tile);
-                    addChild(tile);
-                }
-                TileList.push(x_array);
-            }
-        }
+        // if (TileList.length < VisibleTileHeight_clamp) {
+        //     for (y in 0...(VisibleTileHeight_clamp - TileList.length)) {
+        //         var x_array:Array<TileAtom> = [];
+        //         for (x in 0...TileList[0].length) {
+        //             var tile:TileAtom = new TileAtom();
+        //             x_array.push(tile);
+        //             addChild(tile);
+        //         }
+        //         TileList.push(x_array);
+        //     }
+        // }
 
-        if (TileList.length > VisibleTileHeight_clamp) {
-            for (y in 0...(TileList.length - VisibleTileHeight_clamp)) {
-                var x_array:Array<TileAtom> = TileList.pop();
-                for (x in 0...x_array.length) {
-                    x_array[x].destroy(true);
-                }
-            }
-        }
+        // if (TileList.length > VisibleTileHeight_clamp) {
+        //     for (y in 0...(TileList.length - VisibleTileHeight_clamp)) {
+        //         var x_array:Array<TileAtom> = TileList.pop();
+        //         for (x in 0...x_array.length) {
+        //             x_array[x].destroy(true);
+        //         }
+        //     }
+        // }
 
-        if (TileList[0].length < VisibleTileWidth_clamp) {
-            for (y in 0...TileList.length) {
-                for (x in 0...(VisibleTileWidth_clamp - TileList[0].length)) {
-                    var tile:TileAtom = new TileAtom();
-                    TileList[y].push(tile);
-                    addChild(tile);
-                }
-            }
-        }
+        // if (TileList[0].length < VisibleTileWidth_clamp) {
+        //     for (y in 0...TileList.length) {
+        //         for (x in 0...(VisibleTileWidth_clamp - TileList[0].length)) {
+        //             var tile:TileAtom = new TileAtom();
+        //             TileList[y].push(tile);
+        //             addChild(tile);
+        //         }
+        //     }
+        // }
 
-        if (TileList[0].length > VisibleTileWidth_clamp) {
-            for (y in 0...TileList.length) {
-                for (x in 0...(TileList[0].length - VisibleTileWidth_clamp)) {
-                    TileList[y].pop().destroy(true);
-                }
-            }
-        }
+        // if (TileList[0].length > VisibleTileWidth_clamp) {
+        //     for (y in 0...TileList.length) {
+        //         for (x in 0...(TileList[0].length - VisibleTileWidth_clamp)) {
+        //             TileList[y].pop().destroy(true);
+        //         }
+        //     }
+        // }
 
-        // trace(TileList[0][0].x, TileList[0][0].y);
+        // // trace(TileList[0][0].x, TileList[0][0].y);
 
-        pos_tile1.setTo(
-            Math.floor(TileList[0][0].x / config.tile_size),
-            Math.floor(TileList[0][0].y / config.tile_size)
-        );
+        // pos_tile1.setTo(
+        //     Math.floor(TileList[0][0].x / config.tile_size),
+        //     Math.floor(TileList[0][0].y / config.tile_size)
+        // );
 
-        pos_tile2.setTo(
-            Math.floor(TileList[TileList.length - 1][TileList[0].length - 1].x / config.tile_size),
-            Math.floor(TileList[TileList.length - 1][TileList[0].length - 1].y / config.tile_size)
-        );
+        // pos_tile2.setTo(
+        //     Math.floor(TileList[TileList.length - 1][TileList[0].length - 1].x / config.tile_size),
+        //     Math.floor(TileList[TileList.length - 1][TileList[0].length - 1].y / config.tile_size)
+        // );
 
-        updatePos();
-        // clampCamera();
+        // updatePos();
+        // // clampCamera();
     }
 
     public function updatePos() {
-        // does tile pos on the right position
-        pos_cam1.setTo(
-            Math.floor(SceneRoot.camera.x / config.tile_size),
-            Math.floor(SceneRoot.camera.y / config.tile_size)
-        );
+        // // does tile pos on the right position
+        // pos_cam1.setTo(
+        //     Math.floor(SceneRoot.camera.x / config.tile_size),
+        //     Math.floor(SceneRoot.camera.y / config.tile_size)
+        // );
 
-        pos_cam2.setTo(
-            Math.floor(SceneRoot.camera.x + stage.stageWidth / config.tile_size),
-            Math.floor(SceneRoot.camera.y + stage.stageHeight / config.tile_size)
-        );
+        // pos_cam2.setTo(
+        //     Math.floor(SceneRoot.camera.x + stage.stageWidth / config.tile_size),
+        //     Math.floor(SceneRoot.camera.y + stage.stageHeight / config.tile_size)
+        // );
 
-        if (pos_tile1.x != pos_cam1.x || pos_tile1.y != pos_cam1.y) {
-            trace("update post");
+        // if (pos_tile1.x != pos_cam1.x || pos_tile1.y != pos_cam1.y) {
+        //     trace("update post");
 
-            for (y in 0...TileList.length) {
-                for (x in 0...TileList[0].length) {
-                    var conf:TileConfig = config.tile_config.filter(function(data) { return data.tileId == config.MapData[Std.int(y + pos_cam1.y)].charAt(Std.int(x + pos_cam1.x)); })[0];
-                    TileList[y][x].setTo(conf);
-                    TileList[y][x].x = (x + pos_cam1.x) * config.tile_size;
-                    TileList[y][x].y = (y + pos_cam1.y) * config.tile_size;
-                }
-            }
+        //     for (y in 0...TileList.length) {
+        //         for (x in 0...TileList[0].length) {
+        //             var conf:TileConfig = config.tile_config.filter(function(data) { return data.tileId == config.MapData[Std.int(y + pos_cam1.y)].charAt(Std.int(x + pos_cam1.x)); })[0];
+        //             TileList[y][x].setTo(conf);
+        //             TileList[y][x].x = (x + pos_cam1.x) * config.tile_size;
+        //             TileList[y][x].y = (y + pos_cam1.y) * config.tile_size;
+        //         }
+        //     }
 
-            pos_tile1.setTo(pos_cam1.x, pos_cam1.y);
-        }
+        //     pos_tile1.setTo(pos_cam1.x, pos_cam1.y);
+        // }
 
     }
 

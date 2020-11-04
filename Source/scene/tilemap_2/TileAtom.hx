@@ -1,42 +1,39 @@
 package scene.tilemap_2;
 
+import ngawung.utils.Camera;
 import ngawung.core.MainEngine;
 import starling.display.Image;
 import ngawung.display.Atom;
 
-class TileAtom extends Image implements Atom {
-    private var config:TileConfig;
-
+class TileAtom extends Image {
     private var _ng(get, null):MainEngine;
-    public var TileId(default, null):String;
+    
+    public var tile_pos(default, null):String;
+    public var tile_id(default, null):String;
 
-    public function new(config:TileConfig = null) {
-        if (config == null) this.config = new TileConfig();
-        this.config = config;
+    public function new(tilePos:String, tileId:String = "-1", texture:String = "empty") {
+        super(_ng.assetManager.getTexture(texture));
 
-        super(_ng.assetManager.getTexture(this.config.textureName));
-        TileId = this.config.tileId;
-
+        tile_pos = tilePos;
+        tile_id = tileId;
     }
 
-    public function update(dt:Float):Void {
+    public function isInBound(camera:Camera):Bool {
 
+        return true;
     }
 
     public function destroy(removeFromParent:Bool = false):Void {
         
     }
 
-    public function resize():Void {
-        
-    }
-
     // ###########
 
-    public function setTo(config:TileConfig) {
-        this.texture = _ng.assetManager.getTexture(config.textureName);
-        this.TileId = config.tileId;
-        this.config = config;
+    public function setTo(tilePos:String, tileId:String, texture:String) {
+        this.texture = _ng.assetManager.getTexture(texture);
+        
+        tile_pos = tilePos;
+        tile_id = tileId;
     }
 
     // GET && SET
