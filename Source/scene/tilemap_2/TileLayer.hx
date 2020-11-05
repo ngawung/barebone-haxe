@@ -1,5 +1,6 @@
 package scene.tilemap_2;
 
+import starling.display.Quad;
 import ngawung.core.Scene;
 import openfl.errors.Error;
 import openfl.geom.Point;
@@ -22,8 +23,6 @@ class TileLayer extends Sprite implements Atom {
     private var cameraPos:Point = new Point();
 
     private var TileList:Array<TileAtom> = [];
-    private var TileListRemove:Array<String> = [];
-    private var TileListNew:Array<String> = [];
     
     public function new(config:MapConfig) {
         super();
@@ -42,9 +41,11 @@ class TileLayer extends Sprite implements Atom {
         initTile();
     }
 
+    private var test:Bool = false;
+
     public function update(dt:Float):Void {
         // return if cameraPos didnt changed
-        if (cameraPos.x == Math.floor(SceneRoot.camera.x / config.tile_size) || cameraPos.y == Math.floor(SceneRoot.camera.y / config.tile_size)) return;
+        if (cameraPos.x == Math.floor(SceneRoot.camera.x / config.tile_size) && cameraPos.y == Math.floor(SceneRoot.camera.y / config.tile_size)) return;
 
         // update cameraPos
         cameraPos.setTo(
@@ -52,18 +53,96 @@ class TileLayer extends Sprite implements Atom {
             Math.floor(SceneRoot.camera.y / config.tile_size)
         );
         
-        // add tile that arent inside camera to TileListRemove
-        for (i in 0...TileList.length) {
-            if (!TileList[i].isInBound(Std.int(cameraPos.x), Std.int(cameraPos.y), stage.stageWidth, stage.stageHeight))
-                TileListRemove.push(TileList[i].tile_pos);
-        }
+        // // add tile that arent inside camera to TileListRemove
+        // for (i in 0...TileList.length) {
+        //     var result:Bool = TileList[i].isInBound(SceneRoot.camera.x, SceneRoot.camera.y, stage.stageWidth, stage.stageHeight);
+        //     if (!result) TileListRemove.push(TileList[i].tile_pos);
+        // }
 
         // find tile that need to be updated
+        var TileTempPos:Array<String> = [];
+        var TileNewPos:Array<String> = [];
+
+        var TileOldPos:Array<TileAtom> = [];
+        
+        // get all tile pos
         for (y in 0...VisibleTileHeight_clamp) {
             for (x in 0...VisibleTileWidth_clamp) {
-                
+                TileTempPos.push('${cameraPos.x + x}:${cameraPos.y + y}');
             }
         }
+
+        if (!test) {
+            // test = true;
+
+            // get tile old pos
+            for (i in 0...TileList.length) {
+                if (TileTempPos.indexOf(TileList[i].tile_pos) == -1) {
+                    TileOldPos.push(TileList[i]);
+                }
+            }
+
+            // get tile new pos
+            for (i in 0...TileTempPos.length) {
+                var filter = TileList.filter(function(t:TileAtom):Bool {
+                    return (TileTempPos[i] == t.tile_pos);
+                });
+
+                if (filter.length == 0) TileNewPos.push(TileTempPos[i]);
+            }
+
+            // update old pos to new pos
+            for (i in 0...TileOldPos.length) {
+                var tile_x:Int = Std.parseInt(TileNewPos[i].split(":")[0]);
+                var tile_y:Int = Std.parseInt(TileNewPos[i].split(":")[1]);
+                TileOldPos[i].setTo(TileNewPos[i], config.getMap(tile_x, tile_y), config.getTextureNameMap(tile_x, tile_y));
+                TileOldPos[i].x = tile_x * config.tile_size;
+                TileOldPos[i].y = tile_y * config.tile_size;
+            }
+
+            // // debug draw
+            // for (i in TileNewPos) {
+            //     var q:Quad = new Quad(30, 30, 0x00FFFF);
+            //      q.x = Std.parseInt(i.split(":")[0]) * config.tile_size;
+            //      q.y = Std.parseInt(i.split(":")[1]) * config.tile_size;
+            //      addChild(q);
+            // }
+
+            // for (i in TileOldPos) {
+            //     var q:Quad = new Quad(30, 30, 0xFF00FF);
+            //      q.x = i.x;
+            //      q.y = i.y;
+            //      addChild(q);
+            // }
+        }
+
+
+        // for (y in 0...VisibleTileHeight_clamp) {
+        //     for (x in 0...VisibleTileWidth_clamp) {
+        //         for (tile in TileList) {
+        //             if (tile.tile_pos != '${cameraPos.x + x}:${cameraPos.y + y}') {
+        //                 TileListNew.push('${cameraPos.x + x}:${cameraPos.y + y}');
+        //                 break;
+        //             } else {
+        //                 trace("sama");
+        //             }
+        //         }
+        //     }
+        // }
+
+        // trace("remove", TileListNew.toString());
+
+        // TileListRemove = [];
+        // TileListNew = [];
+
+        // for (i in TileListNew) {
+        //     var q:Quad = new Quad(30, 30, 0xFF00FF);
+        //      q.x = Std.parseInt(i.split(":")[0]) * config.tile_size;
+        //      q.y = Std.parseInt(i.split(":")[1]) * config.tile_size;
+        //      addChild(q);
+        // }
+        // trace("new", TileListNew.toString());
+        // update TileListRemove to TileListNew
     }
 
     public function destroy(removeFromParent:Bool = false):Void {
@@ -71,6 +150,10 @@ class TileLayer extends Sprite implements Atom {
         for (i in 0...TileList.length) TileList[i].destroy(removeFromParent);
 
         // some cleanup here
+    }
+
+    public function resize():Void {
+
     }
 
     // #######

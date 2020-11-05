@@ -17,9 +17,9 @@ class TileAtom extends Image {
         tile_id = tileId;
     }
 
-    public function isInBound(camX:Int, camY:Int, sW:Int, sH:Int):Bool {
-
-        return true;
+    public function isInBound(camX:Float, camY:Float, sW:Int, sH:Int):Bool {
+        // return (x + width > camX || x < camX + sW || y + height > camY || y < camY + sH);
+        return ((x + width >= camX && y + height >= camY) && (x <= camX + sW && y <= camY + sH));
     }
 
     public function destroy(removeFromParent:Bool = false):Void {

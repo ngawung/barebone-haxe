@@ -60,8 +60,6 @@ class Tilemap_2 extends Scene {
 
         layer = new TileLayer(conf);
         addChild(layer);
-
-        trace(camera.x, camera.y);
     }
 
     override function update(dt:Float):Void {
