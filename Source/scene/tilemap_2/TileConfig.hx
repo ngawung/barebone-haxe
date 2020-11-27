@@ -1,14 +1,34 @@
 package scene.tilemap_2;
 
+typedef TileObject = { 
+    var TileId:String;
+    var TextureName:String;
+    var isAnimated:Bool;
+}
+
 class TileConfig {
-    public var tileId(default, null):String;
-    public var textureName(default, null):String;
+    public var ConfigArray:Array<TileObject> = [];
 
-    public var isAnimated(default, null):Bool;
+    public function new() {
 
-    public function new(tileId:String = "-1", textureName:String = "empty", isAnimated:Bool = false) {
-        this.tileId = tileId;
-        this.textureName = textureName;
-        this.isAnimated = isAnimated;
     }
+
+    public function add(TileId:String, TextureName:String, isAnimated:Bool = false) {
+        ConfigArray.push({ TileId: TileId, TextureName: TextureName, isAnimated: isAnimated });
+    }
+
+    /**
+     * return TileObject from TileConfig array.
+     * return null if invalid.
+     * @return TileObject
+     */
+    public function getTileConfig(TileId:String):TileObject {
+        for (obj in ConfigArray) {
+            if (obj.TileId != TileId) continue;
+            return obj;
+        }
+
+        return null;
+    }
+
 }

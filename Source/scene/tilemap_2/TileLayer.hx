@@ -1,6 +1,5 @@
 package scene.tilemap_2;
 
-import starling.display.Quad;
 import ngawung.core.Scene;
 import openfl.errors.Error;
 import openfl.geom.Point;
@@ -10,7 +9,8 @@ import starling.display.Sprite;
 import starling.events.Event;
 
 class TileLayer extends Sprite implements Atom {
-    public var config(default, null):MapConfig;
+    public var TileConfig(default, null):TileConfig;
+    public var TileMap(default, null):TileMap;
 
     private var SceneRoot:Scene;
 
@@ -24,11 +24,12 @@ class TileLayer extends Sprite implements Atom {
 
     private var TileList:Array<TileAtom> = [];
     
-    public function new(config:MapConfig) {
+    public function new(TileMap:TileMap, TileConfig:TileConfig) {
         super();
-        this.config = config;
+        this.TileMap = TileMap;
+        this.TileConfig = TileConfig;
 
-        if (config.MapData.length == 0 || config.MapData[0].length == 0)
+        if (TileMap.MapArray.length == 0 || TileMap.MapArray[0].length == 0)
             throw new Error("MapData canneot be empty");
 
         addEventListener(Event.ADDED_TO_STAGE, onAdded);
@@ -45,12 +46,12 @@ class TileLayer extends Sprite implements Atom {
 
     public function update(dt:Float):Void {
         // return if cameraPos didnt changed
-        if (cameraPos.x == Math.floor(SceneRoot.camera.x / config.tile_size) && cameraPos.y == Math.floor(SceneRoot.camera.y / config.tile_size)) return;
+        if (cameraPos.x == Math.floor(SceneRoot.camera.x / TileMap.TileSize) && cameraPos.y == Math.floor(SceneRoot.camera.y / TileMap.TileSize)) return;
 
         // update cameraPos
         cameraPos.setTo(
-            Math.floor(SceneRoot.camera.x / config.tile_size),
-            Math.floor(SceneRoot.camera.y / config.tile_size)
+            Math.floor(SceneRoot.camera.x / TileMap.TileSize),
+            Math.floor(SceneRoot.camera.y / TileMap.TileSize)
         );
         
         // // add tile that arent inside camera to TileListRemove
@@ -92,10 +93,10 @@ class TileLayer extends Sprite implements Atom {
         for (i in 0...TileOldPos.length) {
             var tile_x:Int = Std.parseInt(TileNewPos[i].split(":")[0]);
             var tile_y:Int = Std.parseInt(TileNewPos[i].split(":")[1]);
-
-            TileOldPos[i].setTo(TileNewPos[i], config.getMap(tile_x, tile_y), config.getTextureNameMap(tile_x, tile_y));
-            TileOldPos[i].x = tile_x * config.tile_size;
-            TileOldPos[i].y = tile_y * config.tile_size;
+            var newTileId:String = TileMap.getMapFromPos(tile_x, tile_y);
+            TileOldPos[i].setTo(TileNewPos[i], newTileId, TileConfig.getTileConfig(newTileId).TextureName);
+            TileOldPos[i].x = tile_x * TileMap.TileSize;
+            TileOldPos[i].y = tile_y * TileMap.TileSize;
         }
     }
 
@@ -114,12 +115,12 @@ class TileLayer extends Sprite implements Atom {
 
     private function calculateVisibleTile() {
         // updateVisibleTile
-        VisibleTileWidth = Std.int(Math.floor(stage.stageWidth / config.tile_size));
-        VisibleTileHeight = Std.int(Math.floor(stage.stageHeight / config.tile_size));
+        VisibleTileWidth = Std.int(Math.floor(stage.stageWidth / TileMap.TileSize));
+        VisibleTileHeight = Std.int(Math.floor(stage.stageHeight / TileMap.TileSize));
         
         // calculate new VisisbleTile
-        VisibleTileHeight_clamp = Std.int(MathUtil.clamp((VisibleTileHeight + VisibleGhostTile), 0, config.MapData.length));
-        VisibleTileWidth_clamp = Std.int(MathUtil.clamp((VisibleTileWidth + VisibleGhostTile), 0, config.MapData[0].length));
+        VisibleTileHeight_clamp = Std.int(MathUtil.clamp((VisibleTileHeight + VisibleGhostTile), 0, TileMap.MapArray.length));
+        VisibleTileWidth_clamp = Std.int(MathUtil.clamp((VisibleTileWidth + VisibleGhostTile), 0, TileMap.MapArray[0].length));
     }
 
     private function initTile():Void {
@@ -128,21 +129,18 @@ class TileLayer extends Sprite implements Atom {
 
         // update cameraPos
         cameraPos.setTo(
-            Math.floor(SceneRoot.camera.x / config.tile_size),
-            Math.floor(SceneRoot.camera.y / config.tile_size)
+            Math.floor(SceneRoot.camera.x / TileMap.TileSize),
+            Math.floor(SceneRoot.camera.y / TileMap.TileSize)
         );
 
         // add tile to TileList
         for (y in 0...VisibleTileHeight_clamp) {
             for (x in 0...VisibleTileWidth_clamp) {
-                var tile:TileAtom = new TileAtom(
-                    '${cameraPos.x + x}:${cameraPos.y + y}',
-                    config.getMap(Std.int(cameraPos.x + x), Std.int(cameraPos.y + y)),
-                    config.getTextureNameMap(Std.int(cameraPos.x + x), Std.int(cameraPos.y + y))
-                );
+                var tileId:String = TileMap.getMapFromPos(Std.int(cameraPos.x + x), Std.int(cameraPos.y + y));
+                var tile:TileAtom = new TileAtom('${cameraPos.x + x}:${cameraPos.y + y}', tileId, TileConfig.getTileConfig(tileId).TextureName);
 
-                tile.x = (cameraPos.x + x) * config.tile_size;
-                tile.y = (cameraPos.y + y) * config.tile_size;
+                tile.x = (cameraPos.x + x) * TileMap.TileSize;
+                tile.y = (cameraPos.y + y) * TileMap.TileSize;
                 TileList.push(tile);
                 addChild(tile);
             }
@@ -155,7 +153,7 @@ class TileLayer extends Sprite implements Atom {
      * Clamp camera to the MapData
      */
     public function clampCamera() {
-        SceneRoot.camera.x = MathUtil.clamp(SceneRoot.camera.x, 0, (config.MapData[0].length - VisibleTileWidth) * config.tile_size);
-        SceneRoot.camera.y = MathUtil.clamp(SceneRoot.camera.y, 0, (config.MapData.length - VisibleTileHeight) * config.tile_size);
+        SceneRoot.camera.x = MathUtil.clamp(SceneRoot.camera.x, 0, (TileMap.MapArray[0].length - VisibleTileWidth) * TileMap.TileSize);
+        SceneRoot.camera.y = MathUtil.clamp(SceneRoot.camera.y, 0, (TileMap.MapArray.length - VisibleTileHeight) * TileMap.TileSize);
     }
 }

@@ -39,26 +39,26 @@ class Tilemap_2 extends Scene {
         MapsData.push("....3...#.2.....8..#.2.....8.1........7");
         MapsData.push(".....4..#1.......9##1.......9.........8");
 
-        var tileConf_list:Array<TileConfig> = [
-            new TileConfig(".", "tile2"),
-            new TileConfig("#", "tile1"),
-            new TileConfig("1", "1"),
-            new TileConfig("2", "2"),
-            new TileConfig("3", "3"),
-            new TileConfig("4", "4"),
-            new TileConfig("5", "5"),
-            new TileConfig("6", "6"),
-            new TileConfig("7", "7"),
-            new TileConfig("8", "8"),
-            new TileConfig("9", "9"),
-        ];
+        var tileConf_list:TileConfig = new TileConfig();
+        tileConf_list.add(".", "tile2");
+        tileConf_list.add("#", "tile1");
+        tileConf_list.add("1", "1");
+        tileConf_list.add("2", "2");
+        tileConf_list.add("3", "3");
+        tileConf_list.add("4", "4");
+        tileConf_list.add("5", "5");
+        tileConf_list.add("6", "6");
+        tileConf_list.add("7", "7");
+        tileConf_list.add("8", "8");
+        tileConf_list.add("9", "9");
+        tileConf_list.add("-1", "empty");
         
-        var conf:MapConfig = new MapConfig(MapsData, TileSize, tileConf_list);
+        var tileMap:TileMap = new TileMap(MapsData, TileSize);
 
         // camera.x = -(TileSize * 5);
         // camera.y = -(TileSize * 5);
 
-        layer = new TileLayer(conf);
+        layer = new TileLayer(tileMap, tileConf_list);
         addChild(layer);
     }
 
