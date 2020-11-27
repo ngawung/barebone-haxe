@@ -86,8 +86,8 @@ class MainEngine extends EventDispatcher {
 		else _baseRectangle.height = config.baseScreen.height;
 		
 		_screenRectangle.copyFrom(_viewport);
-		trace("base rect", _baseRectangle);
-		trace("screen rect", _screenRectangle);
+		// trace("base rect", _baseRectangle);
+		// trace("screen rect", _screenRectangle);
 
 		// calculate new viewport
 		RectangleUtil.fit(_baseRectangle, _screenRectangle, ScaleMode.SHOW_ALL, false, _viewport);
@@ -111,6 +111,8 @@ class MainEngine extends EventDispatcher {
 				starling.stage.stageWidth = Std.int(_screenRectangle.width / baseRatioWidth);
 				starling.stage.stageHeight = Std.int(_screenRectangle.height / baseRatioHeight);
 		}
+
+		if (gameRoot != null) gameRoot.resize();
 	}
 	
 	private function handleStarlingReady():Void {
