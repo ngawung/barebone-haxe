@@ -18,7 +18,7 @@ class TileLayer extends Sprite implements Atom {
     private var VisibleTileHeight:Int;
     private var VisibleTileHeight_clamp:Int;
     private var VisibleTileWidth_clamp:Int;
-    private var VisibleGhostTile:Int = 0;
+    private var VisibleGhostTile:Int = 1;
 
     private var cameraPos:Point = new Point();
 

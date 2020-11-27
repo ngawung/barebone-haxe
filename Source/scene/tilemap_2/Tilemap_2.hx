@@ -67,6 +67,8 @@ class Tilemap_2 extends Scene {
         if (input.isHeld(Keyboard.S)) camera.y += cameraSpeed;
         if (input.isHeld(Keyboard.A)) camera.x -= cameraSpeed;
         if (input.isHeld(Keyboard.D)) camera.x += cameraSpeed;
+
+        layer.clampCamera();
     }
 
     override function resize() {
