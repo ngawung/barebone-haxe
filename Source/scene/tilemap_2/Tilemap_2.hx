@@ -55,8 +55,8 @@ class Tilemap_2 extends Scene {
         
         var conf:MapConfig = new MapConfig(MapsData, TileSize, tileConf_list);
 
-        camera.x = -(TileSize * 5);
-        camera.y = -(TileSize * 5);
+        // camera.x = -(TileSize * 5);
+        // camera.y = -(TileSize * 5);
 
         layer = new TileLayer(conf);
         addChild(layer);

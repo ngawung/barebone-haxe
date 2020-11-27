@@ -33,7 +33,7 @@ class MapConfig {
      * @return String
      */
      public function getTextureNameMap(x:Int, y:Int):String {
-        if (y > MapData.length || x > MapData[0].length || y < 0 || x < 0) return "empty";
+        if (y >= MapData.length || x >= MapData[0].length || y < 0 || x < 0) return "empty";
 
         return getTextureName(MapData[y].charAt(x));
     }
@@ -44,7 +44,7 @@ class MapConfig {
      * @return String
      */
     public function getMap(x:Int, y:Int):String {
-        if (y > MapData.length || x > MapData[0].length || y < 0 || x < 0) return "-1";
+        if (y >= MapData.length || x >= MapData[0].length || y < 0 || x < 0) return "-1";
 
         return MapData[y].charAt(x);
     }

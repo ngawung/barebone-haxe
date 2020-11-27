@@ -72,77 +72,31 @@ class TileLayer extends Sprite implements Atom {
             }
         }
 
-        if (!test) {
-            // test = true;
-
-            // get tile old pos
-            for (i in 0...TileList.length) {
-                if (TileTempPos.indexOf(TileList[i].tile_pos) == -1) {
-                    TileOldPos.push(TileList[i]);
-                }
+        // get tile old pos
+        for (i in 0...TileList.length) {
+            if (TileTempPos.indexOf(TileList[i].tile_pos) == -1) {
+                TileOldPos.push(TileList[i]);
             }
-
-            // get tile new pos
-            for (i in 0...TileTempPos.length) {
-                var filter = TileList.filter(function(t:TileAtom):Bool {
-                    return (TileTempPos[i] == t.tile_pos);
-                });
-
-                if (filter.length == 0) TileNewPos.push(TileTempPos[i]);
-            }
-
-            // update old pos to new pos
-            for (i in 0...TileOldPos.length) {
-                var tile_x:Int = Std.parseInt(TileNewPos[i].split(":")[0]);
-                var tile_y:Int = Std.parseInt(TileNewPos[i].split(":")[1]);
-                TileOldPos[i].setTo(TileNewPos[i], config.getMap(tile_x, tile_y), config.getTextureNameMap(tile_x, tile_y));
-                TileOldPos[i].x = tile_x * config.tile_size;
-                TileOldPos[i].y = tile_y * config.tile_size;
-            }
-
-            // // debug draw
-            // for (i in TileNewPos) {
-            //     var q:Quad = new Quad(30, 30, 0x00FFFF);
-            //      q.x = Std.parseInt(i.split(":")[0]) * config.tile_size;
-            //      q.y = Std.parseInt(i.split(":")[1]) * config.tile_size;
-            //      addChild(q);
-            // }
-
-            // for (i in TileOldPos) {
-            //     var q:Quad = new Quad(30, 30, 0xFF00FF);
-            //      q.x = i.x;
-            //      q.y = i.y;
-            //      addChild(q);
-            // }
         }
 
+        // get tile new pos
+        for (i in 0...TileTempPos.length) {
+            var filter = TileList.filter(function(t:TileAtom):Bool {
+                return (TileTempPos[i] == t.tile_pos);
+            });
 
-        // for (y in 0...VisibleTileHeight_clamp) {
-        //     for (x in 0...VisibleTileWidth_clamp) {
-        //         for (tile in TileList) {
-        //             if (tile.tile_pos != '${cameraPos.x + x}:${cameraPos.y + y}') {
-        //                 TileListNew.push('${cameraPos.x + x}:${cameraPos.y + y}');
-        //                 break;
-        //             } else {
-        //                 trace("sama");
-        //             }
-        //         }
-        //     }
-        // }
+            if (filter.length == 0) TileNewPos.push(TileTempPos[i]);
+        }
 
-        // trace("remove", TileListNew.toString());
+        // update old pos to new pos
+        for (i in 0...TileOldPos.length) {
+            var tile_x:Int = Std.parseInt(TileNewPos[i].split(":")[0]);
+            var tile_y:Int = Std.parseInt(TileNewPos[i].split(":")[1]);
 
-        // TileListRemove = [];
-        // TileListNew = [];
-
-        // for (i in TileListNew) {
-        //     var q:Quad = new Quad(30, 30, 0xFF00FF);
-        //      q.x = Std.parseInt(i.split(":")[0]) * config.tile_size;
-        //      q.y = Std.parseInt(i.split(":")[1]) * config.tile_size;
-        //      addChild(q);
-        // }
-        // trace("new", TileListNew.toString());
-        // update TileListRemove to TileListNew
+            TileOldPos[i].setTo(TileNewPos[i], config.getMap(tile_x, tile_y), config.getTextureNameMap(tile_x, tile_y));
+            TileOldPos[i].x = tile_x * config.tile_size;
+            TileOldPos[i].y = tile_y * config.tile_size;
+        }
     }
 
     public function destroy(removeFromParent:Bool = false):Void {
