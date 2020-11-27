@@ -1,5 +1,6 @@
 package;
 
+import scene.tilemap_3.Tilemap_3;
 import scene.tilemap_2.Tilemap_2;
 import openfl.display.StageAlign;
 import openfl.display.StageScaleMode;
@@ -63,7 +64,7 @@ class Main extends Sprite {
 
 		
 		_ng.assetManager.loadQueue(function():Void {
-			_ng.gameRoot.scene = new Tilemap_2();
+			_ng.gameRoot.scene = new Tilemap_3();
 		});
 	}
 	
